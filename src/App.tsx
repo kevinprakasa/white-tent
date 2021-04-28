@@ -1,6 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import "@progress/kendo-theme-default/dist/all.css";
+import { Calendar } from "@progress/kendo-react-dateinputs";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <Calendar />
     </div>
   );
 }
