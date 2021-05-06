@@ -1,0 +1,44 @@
+.login-page-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  .sign-in-label {
+    text-align: left;
+    margin: 1rem 1rem 5rem 0;
+  }
+
+  .form-container {
+    margin-bottom: 8rem;
+    .forgot-password {
+      text-align: right;
+
+      a {
+        color: #729eff;
+        text-decoration: none;
+      }
+    }
+
+    .login-btn-wrap {
+      width: 100%;
+      margin-top: 2rem;
+      .login-btn-submit {
+        background: #4a4a4a;
+        padding: 1.2rem;
+        width: 95%;
+        margin: auto;
+      }
+    }
+
+    // width: 60%;
+    // margin: auto;
+  }
+
+  .dont-have-account-text {
+    a {
+      font-weight: bold;
+      text-decoration: none;
+      color: #4a4a4a;
+    }
+  }
+}

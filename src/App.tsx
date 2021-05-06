@@ -1,7 +1,8 @@
 import "./App.css";
-import "@progress/kendo-theme-default/dist/all.css";
-import { Calendar } from "@progress/kendo-react-dateinputs";
+import "@progress/kendo-theme-material/dist/all.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
+import LoginPage from "containers/LoginPage";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
                 <Link to="/login">login</Link>
               </li>
               <li>
-                <Link to="/register">register</Link>
+                <Link to="/signup">signup</Link>
               </li>
             </ul>
           </nav>
@@ -26,10 +27,9 @@ function App() {
             renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/login">
-              <div>login</div>
-              <Calendar />
+              <LoginPage />
             </Route>
-            <Route path="/register">
+            <Route path="/signup">
               <div>register</div>
             </Route>
             <Route path="/">
