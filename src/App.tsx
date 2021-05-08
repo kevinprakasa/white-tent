@@ -3,6 +3,7 @@ import "@progress/kendo-theme-material/dist/all.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import LoginPage from "containers/LoginPage";
+import SignupPage from "containers/SignupPage";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
               <LoginPage />
             </Route>
             <Route path="/signup">
-              <div>register</div>
+              <SignupPage />
             </Route>
             <Route path="/">
               <div>root</div>

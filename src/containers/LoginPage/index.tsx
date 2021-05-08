@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
       <div className="icon-wrap">
         <img className="white-tent-logo" src={Logo} alt={`white-tent-logo`} />
       </div>
-      <h1 className="sign-in-label">Sign in.</h1>
+      <h1 className="sign-in-label">Sign In.</h1>
       <div className="form-container">
         <Form
           onSubmit={handleSubmit}

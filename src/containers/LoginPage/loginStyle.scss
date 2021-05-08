@@ -5,8 +5,9 @@
 
   .icon-wrap {
     margin-bottom: 8rem;
+    width: 100%;
     .white-tent-logo {
-      width: 40%;
+      width: 35vw;
     }
   }
 
@@ -24,6 +25,10 @@
         color: #729eff;
         text-decoration: none;
       }
+    }
+
+    input {
+      margin: 0.5rem 0;
     }
 
     .login-btn-wrap {
