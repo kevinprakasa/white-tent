@@ -3,6 +3,13 @@
   display: flex;
   flex-direction: column;
 
+  .icon-wrap {
+    margin-bottom: 8rem;
+    .white-tent-logo {
+      width: 40%;
+    }
+  }
+
   .sign-in-label {
     text-align: left;
     margin: 1rem 1rem 5rem 0;
@@ -27,6 +34,7 @@
         padding: 1.2rem;
         width: 95%;
         margin: auto;
+        border-radius: 8px;
       }
     }
 

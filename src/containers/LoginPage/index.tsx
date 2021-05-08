@@ -3,13 +3,17 @@ import { Form, Field, FormElement } from "@progress/kendo-react-form";
 import { FormInput } from "components/FormComponents";
 import { Button } from "@progress/kendo-react-buttons";
 
+import Logo from "assets/logo.png";
+
 import "./loginStyle.scss";
 
 const LoginPage: React.FC = () => {
   const handleSubmit = () => {};
   return (
     <div className="login-page-container">
-      <div className="icon-wrap"></div>
+      <div className="icon-wrap">
+        <img className="white-tent-logo" src={Logo} alt={`white-tent-logo`} />
+      </div>
       <h1 className="sign-in-label">Sign in.</h1>
       <div className="form-container">
         <Form
