@@ -63,10 +63,20 @@ const SignupPage: React.FC = () => {
       {renderDialog}
       <div className="icon-wrap">
         <div className="back-btn">
-          <img className="left-chevron" src={BackImg} alt="left-chevron" />
+          <img
+            className="left-chevron"
+            src={BackImg}
+            alt="left-chevron"
+            onClick={() => history.goBack()}
+          />
         </div>
         <div className="logo-wrap">
-          <img className="white-tent-logo" src={Logo} alt={`white-tent-logo`} />
+          <img
+            className="white-tent-logo"
+            src={Logo}
+            alt={`white-tent-logo`}
+            onClick={() => history.push("/")}
+          />
         </div>
         <div className="spacer"> </div>
       </div>

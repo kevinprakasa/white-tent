@@ -57,7 +57,12 @@ const LoginPage: React.FC = () => {
     <div className="login-page-container">
       {renderDialog}
       <div className="icon-wrap">
-        <img className="white-tent-logo" src={Logo} alt={`white-tent-logo`} />
+        <img
+          className="white-tent-logo"
+          src={Logo}
+          alt={`white-tent-logo`}
+          onClick={() => history.goBack()}
+        />
       </div>
       <h1 className="sign-in-label">Sign In.</h1>
       <div className="form-container">
