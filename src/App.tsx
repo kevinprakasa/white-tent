@@ -3,6 +3,8 @@ import "@progress/kendo-theme-material/dist/all.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import LoginPage from "containers/LoginPage";
+import ReportViewer from 'components/ReportComponents/ReportViewer';
+
 
 function App() {
   return (
@@ -35,7 +37,8 @@ function App() {
             <Route path="/">
               <div>root</div>
             </Route>
-          </Switch>
+        </Switch>
+        <ReportViewer />
         </div>
       </Router>
     </div>
