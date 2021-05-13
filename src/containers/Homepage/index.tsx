@@ -1,15 +1,15 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardBody,
   CardActions,
   CardImage,
   CardSubtitle,
   Avatar,
 } from "@progress/kendo-react-layout";
 import "./styles.scss";
+import { getNearestProduct, getShopCategories } from "util/FirebaseAPI";
 
 const cardsData = [
   {
@@ -165,6 +165,36 @@ const cardsData = [
 ];
 
 export const Homepage: FC = () => {
+  useEffect(() => {
+    const successGetLocationCallback = (pos: GeolocationPosition) => {
+      console.log("CURRENT POSTIION", pos);
+      const {
+        coords: { longitude, latitude },
+      } = pos;
+      getShopCategories(
+        (res: any) => console.log("QWEQEQWE", res),
+        (err: any) => console.log(err)
+      );
+      getNearestProduct({ longitude, latitude });
+    };
+
+    const errorGetLocationCallback = (error: GeolocationPositionError) => {
+      console.log(error.message);
+    };
+
+    // Get user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        successGetLocationCallback,
+        errorGetLocationCallback,
+        { enableHighAccuracy: true }
+      );
+    } else {
+      // When current device doesn't support getting user's location
+      console.log("Geolocation is not supported by this browser");
+    }
+  }, []);
+
   return (
     <div>
       <h2>Nearest from you</h2>
