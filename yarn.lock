@@ -1709,7 +1709,7 @@
   resolved "https://registry.yarnpkg.com/@progress/kendo-popup-common/-/kendo-popup-common-1.8.0.tgz#02ec32974762f30bdb2bb968e3c5b73c76c82c33"
   integrity sha512-/cu0nV+3tHKPEE/bUbJTJHv6t8BMYpwI3uVOYENASYy+ZK1dlOfuRhdpSGH85glAH6NMtr/5pYOPojuXFFz/8A==
 
-"@progress/kendo-react-animation@^4.5.0":
+"@progress/kendo-react-animation@4.5.0", "@progress/kendo-react-animation@^4.5.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-react-animation/-/kendo-react-animation-4.5.0.tgz#d3e07c3b8a9c6d57cc7507dd9bc8b43e69cb6561"
   integrity sha512-nK9Gh2KYeXCkJ9P1e560CR3DWeL/hYvgX6pvUh4afoZrW/X8kK5pHRtL9pDhNXuMqxR/62df+VpSpRUl8RbPOQ==
@@ -1789,6 +1789,16 @@
     "@progress/kendo-react-common" "4.5.0"
     prop-types "^15.6.0"
 
+"@progress/kendo-react-layout@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-react-layout/-/kendo-react-layout-4.5.0.tgz#27a2d7535b527418eab556984607bd99bceceeca"
+  integrity sha512-jhch1bUvCxKL2k8opvjq2slxtBZS3qd3W3D6EzKj/DUtyMYKrghdY2pmQFrteP6bdKyKLdfggRtRp7Rgdjdccw==
+  dependencies:
+    "@progress/kendo-react-animation" "4.5.0"
+    "@progress/kendo-react-common" "4.5.0"
+    "@progress/kendo-react-popup" "4.5.0"
+    prop-types "^15.6.0"
+
 "@progress/kendo-react-popup@4.5.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-react-popup/-/kendo-react-popup-4.5.0.tgz#7d450adb5fb4b7ac787a64ccf9b5ab825b6a21c0"
@@ -1798,10 +1808,13 @@
     "@progress/kendo-react-common" "4.5.0"
     prop-types "^15.6.0"
 
-"@progress/kendo-theme-default@^4.37.0":
-  version "4.37.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.37.0.tgz#af03067f008896a79f514ec511dae0f19af5c91d"
-  integrity sha512-y8oEFllSCVCcGgSF1iIqw0nobOjY//LSpDW55/HgPOnfVLxtTWVzaoZ1olmDFZ83+XaRRtJyyE1x0Jn1HsuNdA==
+"@progress/kendo-react-progressbars@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-react-progressbars/-/kendo-react-progressbars-4.5.0.tgz#ce7ca577e8e5356f46e12031242b8b06e21de299"
+  integrity sha512-leEZtZGTsLq98Ubm5itXzTgQHWxX649Q2Lm8bbooGF5hhSBtYPM5LaegZn2Ata8h6nsD8tiGeYQCWpH9eGOb3Q==
+  dependencies:
+    "@progress/kendo-react-common" "4.5.0"
+    prop-types "^15.6.0"
 
 "@progress/kendo-theme-material@^3.33.1":
   version "3.33.1"
