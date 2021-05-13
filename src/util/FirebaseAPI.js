@@ -109,78 +109,70 @@ export function signOut(callbackSuccess, callbackError) {
     });
 }
 
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2 - lat1); // deg2rad below
-  var dLon = deg2rad(lon2 - lon1);
+//Helper function for getNearestShops
+//Reference: https://www.geeksforgeeks.org/program-distance-two-points-earth/
+function getDistance(
+  targetLatitude,
+  targetLongitude,
+  shopLatitude,
+  shopLongitude
+) {
+  //converts from degrees to radians
+  targetLatitude = (targetLatitude * Math.PI) / 180;
+  targetLongitude = (targetLongitude * Math.PI) / 180;
+  shopLatitude = (shopLatitude * Math.PI) / 180;
+  shopLongitude = (shopLongitude * Math.PI) / 180;
+
+  // Haversine formula
+  var distanceLatitude = targetLatitude - shopLatitude;
+  var distanceLongitude = targetLongitude - shopLongitude;
+
   var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c; // Distance in km
-  return d;
+    Math.pow(Math.sin(distanceLatitude / 2), 2) +
+    Math.cos(targetLatitude) *
+      Math.cos(shopLatitude) *
+      Math.pow(Math.sin(distanceLongitude / 2), 2);
+
+  var c = 2 * Math.asin(Math.sqrt(a));
+
+  // Radius of earth in kilometers
+  return Math.round(c * 6371 * 10) / 10;
 }
 
-function deg2rad(deg) {
-  return deg * (Math.PI / 180);
-}
+export function getNearestShops(
+  targetLatitude,
+  targetLongitude,
+  callbackSuccess,
+  callbackError
+) {
+  const shops = [];
 
-export function getNearestShops(userGeoLoc, callbackSuccess, callbackError) {
   db.collection("shop")
     .get()
     .then((querySnapshot) => {
-      const nearestShops = [];
-      const { longitude, latitude } = userGeoLoc;
       querySnapshot.forEach((doc) => {
-        // Calculate the distance (in km)
-        const distanceBetweenShopAndUserLoc = getDistanceFromLatLonInKm(
-          latitude,
-          longitude,
-          doc.data().coordinate._lat,
-          doc.data().coordinate._long
+        var data = doc.data();
+
+        data["distance"] = getDistance(
+          targetLatitude,
+          targetLongitude,
+          data["coordinate"]["latitude"],
+          data["coordinate"]["longitude"]
         );
-        nearestShops.push({
-          id: doc.id,
-          ...doc.data(),
-          distance: distanceBetweenShopAndUserLoc,
+
+        shops.push({
+          shop_id: doc.id,
+          name: data["name"],
+          distance: data["distance"],
+          photo_url: data["photo_url"],
         });
       });
 
-      // Sort nearestShops so it orderBy it's distance from nearest to farthest
-      nearestShops.sort((a, b) =>
-        a.distance > b.distance ? 1 : a.distance < b.distance ? -1 : 0
-      );
+      shops.sort((a, b) => (a["distance"] < b["distance"] ? -1 : 1));
 
-      callbackSuccess(nearestShops);
+      callbackSuccess(shops);
     })
-    .catch(callbackError);
-}
-
-export function getShopCategories(callbackSuccess, callbackError) {
-  db.collection("shop_category")
-    .get()
-    .then((querySnapshot) => {
-      const res = {};
-      querySnapshot.forEach((doc) => {
-        res[doc.id] = doc.data();
-      });
-      callbackSuccess(res);
-    })
-    .catch((error) => callbackError(error));
-}
-
-export function getMostLikedProducts(callbackSuccess, callbackError) {
-  db.collectionGroup("products")
-    .get()
-    .then((querySnapshot) => {
-      const mostLikedProducts = [];
-      querySnapshot.forEach((doc) => {
-        mostLikedProducts.push(doc.data());
-      });
-      callbackSuccess(mostLikedProducts);
-    })
-    .catch((error) => callbackError(error));
+    .catch((error) => {
+      callbackError(error);
+    });
 }
