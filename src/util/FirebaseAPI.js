@@ -176,3 +176,37 @@ export function getNearestShops(
       callbackError(error);
     });
 }
+
+export function getShopCategories(callbackSuccess, callbackError) {
+  db.collection("shop_category")
+    .get()
+    .then((querySnapshot) => {
+      const res = {};
+      querySnapshot.forEach((doc) => {
+        res[doc.id] = doc.data();
+      });
+      callbackSuccess(res);
+    })
+    .catch((error) => callbackError(error));
+}
+
+export function getMostLikedProducts(callbackSuccess, callbackError) {
+  db.collectionGroup("products")
+    .get()
+    .then((querySnapshot) => {
+      const mostLikedProducts = [];
+      querySnapshot.forEach((doc) => {
+        mostLikedProducts.push(doc.data());
+      });
+      // Sort from most likes to least likes
+      mostLikedProducts.sort((a, b) => {
+        const aTotalLikes = a.total_likes ?? -1;
+        const bTotalLikes = b.total_likes ?? -1;
+        return aTotalLikes > bTotalLikes ? -1 : 1;
+      });
+
+      // Return only 10 most likes products
+      callbackSuccess(mostLikedProducts.slice(0, 10));
+    })
+    .catch((error) => callbackError(error));
+}
