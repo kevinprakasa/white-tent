@@ -109,22 +109,54 @@ export function signOut(callbackSuccess, callbackError) {
     });
 }
 
-export function getNearestProduct(userGeoLoc) {
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1); // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+export function getNearestShops(userGeoLoc, callbackSuccess, callbackError) {
   db.collection("shop")
     .get()
     .then((querySnapshot) => {
-      console.log(
-        "🚀 ~ file: FirebaseAPI.js ~ line 117 ~ .then ~ querySnapshot",
-        querySnapshot
-      );
+      const nearestShops = [];
+      const { longitude, latitude } = userGeoLoc;
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        // Calculate the distance (in km)
+        const distanceBetweenShopAndUserLoc = getDistanceFromLatLonInKm(
+          latitude,
+          longitude,
+          doc.data().coordinate._lat,
+          doc.data().coordinate._long
+        );
+        nearestShops.push({
+          id: doc.id,
+          ...doc.data(),
+          distance: distanceBetweenShopAndUserLoc,
+        });
       });
+
+      // Sort nearestShops so it orderBy it's distance from nearest to farthest
+      nearestShops.sort((a, b) =>
+        a.distance > b.distance ? 1 : a.distance < b.distance ? -1 : 0
+      );
+
+      callbackSuccess(nearestShops);
     })
-    .catch((error) => {
-      console.log("Error getting documents:", error);
-    });
+    .catch(callbackError);
 }
 
 export function getShopCategories(callbackSuccess, callbackError) {
@@ -135,8 +167,20 @@ export function getShopCategories(callbackSuccess, callbackError) {
       querySnapshot.forEach((doc) => {
         res[doc.id] = doc.data();
       });
-      console.log("RES", res);
       callbackSuccess(res);
+    })
+    .catch((error) => callbackError(error));
+}
+
+export function getMostLikedProducts(callbackSuccess, callbackError) {
+  db.collectionGroup("products")
+    .get()
+    .then((querySnapshot) => {
+      const mostLikedProducts = [];
+      querySnapshot.forEach((doc) => {
+        mostLikedProducts.push(doc.data());
+      });
+      callbackSuccess(mostLikedProducts);
     })
     .catch((error) => callbackError(error));
 }
