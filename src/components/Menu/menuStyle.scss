@@ -1,0 +1,59 @@
+.menu-container {
+  .menu-card {
+    padding: 0.5rem;
+
+    .menu-top {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .menu-photo-text-wrap {
+        display: flex;
+        flex-direction: row;
+
+        .menu-item-img-wrap {
+          margin-right: 0.5rem;
+          display: flex;
+          // align-items: center;
+          // width: 10vh;
+          img {
+            object-fit: cover;
+            border-radius: 4px;
+            width: 10vh;
+            height: 10vh;
+          }
+        }
+
+        .menu-item-text-wrap {
+          width: 65%;
+          .k-card-title {
+            margin: 0;
+            font-size: 22px;
+          }
+
+          .price {
+            margin-top: 0;
+          }
+        }
+      }
+
+      .like-icon-wrap {
+        // width: 100%;
+        text-align: right;
+        margin: 0 0.5rem;
+        // display: flex;
+        img {
+          width: 3vh;
+        }
+      }
+    }
+  }
+}
+
+.menu-header {
+  margin-left: 0.5rem;
+  border-bottom: 1px dashed lightgray;
+  font-weight: bold;
+  font-size: 18px;
+}

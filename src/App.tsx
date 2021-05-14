@@ -10,6 +10,7 @@ import {
 } from "@progress/kendo-react-layout";
 import LoginPage from "containers/LoginPage";
 import SignupPage from "containers/SignupPage";
+import StorePage from "containers/StorePage";
 
 let kendokaAvatar =
   "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
@@ -68,6 +69,9 @@ function App() {
             </Route>
             <Route path="/signup">
               <SignupPage />
+            </Route>
+            <Route path="/store">
+              <StorePage />
             </Route>
             <Route path="/">
               <Homepage />
