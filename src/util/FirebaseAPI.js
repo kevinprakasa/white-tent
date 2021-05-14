@@ -210,3 +210,28 @@ export function getMostLikedProducts(callbackSuccess, callbackError) {
     })
     .catch((error) => callbackError(error));
 }
+
+export function getShopsByName(target, callbackSuccess, callbackError) {
+    const shops = [];
+
+    db.collection("shop")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var data = doc.data();
+
+                if (data["name"].toLowerCase().includes(target.toLowerCase())) {
+                    shops.push({
+                        shop_id: doc.id,
+                        name: data["name"],
+                        photo_url: data["photo_url"],
+                    });
+                }
+            })
+
+            callbackSuccess(shops);
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
