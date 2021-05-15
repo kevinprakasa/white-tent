@@ -235,3 +235,19 @@ export function getShopsByName(target, callbackSuccess, callbackError) {
             callbackError(error);
         });
 }
+
+export function getShopDetail(shopId, callbackSuccess, callbackError) {
+    db.collection("shop").doc(shopId)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                callbackSuccess(doc.data());
+            } else {
+                callbackError("Error: shop id does not exists");
+            }
+            
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
