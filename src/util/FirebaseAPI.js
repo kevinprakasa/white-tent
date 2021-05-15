@@ -245,7 +245,36 @@ export function getShopDetail(shopId, callbackSuccess, callbackError) {
             } else {
                 callbackError("Error: shop id does not exists");
             }
-            
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
+
+export function getProductList(shopId, callbackSuccess, callbackError) {
+    db.collection("shop").doc(shopId).collection("products")
+        .get()
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                var categories = {};
+
+                querySnapshot.forEach((doc) => {
+                    var data = doc.data();
+                    data["product_id"] = doc.id;
+
+                    data["categories"].forEach((category) => {
+                        if (!(category in categories)) {
+                            categories[category] = [];
+                        }
+
+                        categories[category].push(data);
+                    })
+                });
+
+                callbackSuccess(categories);
+            } else {
+                callbackError("Error: shop id does not exists or there are no products");
+            }
         })
         .catch((error) => {
             callbackError(error);
