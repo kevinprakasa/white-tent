@@ -9,7 +9,11 @@ import {
   Avatar,
 } from "@progress/kendo-react-layout";
 import "./styles.scss";
-import { getNearestProduct, getShopCategories } from "util/FirebaseAPI";
+import {
+  getNearestShops,
+  getShopCategories,
+  getMostLikedProducts,
+} from "util/FirebaseAPI";
 
 const cardsData = [
   {
@@ -172,10 +176,17 @@ export const Homepage: FC = () => {
         coords: { longitude, latitude },
       } = pos;
       getShopCategories(
-        (res: any) => console.log("QWEQEQWE", res),
+        (res: any) => console.log("Shop categories ===>", res),
         (err: any) => console.log(err)
       );
-      getNearestProduct({ longitude, latitude });
+      getNearestShops(
+        { longitude, latitude },
+        (nearestShops: any) => console.log("nearest Shops ===>", nearestShops),
+        console.log
+      );
+      getMostLikedProducts((mostLikedProducts: any) => {
+        console.log("MOST LIKED PRODUCTS", mostLikedProducts);
+      }, console.log);
     };
 
     const errorGetLocationCallback = (error: GeolocationPositionError) => {
