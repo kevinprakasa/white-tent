@@ -4,7 +4,7 @@ import { FormInput } from "components/FormComponents";
 import { Button } from "@progress/kendo-react-buttons";
 import { useHistory } from "react-router";
 
-import Logo from "assets/logo.png";
+import Logo from "assets/logo.svg";
 import { signInWithEmailAndPassword, isUserLoggedIn } from "util/FirebaseAPI";
 import { emailValidator, passwordValidator } from "util/validators";
 import DialogComponent from "components/DialogComponent";

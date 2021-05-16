@@ -14,6 +14,7 @@ import AppLogoWhite from "assets/logo-white.svg";
 import { useEffect, useRef, useState } from "react";
 import { isUserLoggedIn } from "util/FirebaseAPI";
 import { Popup } from "@progress/kendo-react-popup";
+import StorePage from "containers/StorePage";
 
 let kendokaAvatar =
   "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
@@ -178,6 +179,9 @@ function App() {
             </Route>
             <Route path="/signup">
               <SignupPage />
+            </Route>
+            <Route path="/store">
+              <StorePage />
             </Route>
             <Route path="/">
               <Homepage />

@@ -3,7 +3,7 @@ import { Form, Field, FormElement } from "@progress/kendo-react-form";
 import { FormInput } from "components/FormComponents";
 import { Button } from "@progress/kendo-react-buttons";
 
-import Logo from "assets/logo.png";
+import Logo from "assets/logo.svg";
 import BackImg from "assets/left-chevron.png";
 import { signUpWithEmailAndPassword } from "util/FirebaseAPI";
 import {
