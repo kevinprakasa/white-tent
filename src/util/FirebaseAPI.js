@@ -210,3 +210,73 @@ export function getMostLikedProducts(callbackSuccess, callbackError) {
     })
     .catch((error) => callbackError(error));
 }
+
+export function getShopsByName(target, callbackSuccess, callbackError) {
+    const shops = [];
+
+    db.collection("shop")
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var data = doc.data();
+
+                if (data["name"].toLowerCase().includes(target.toLowerCase())) {
+                    shops.push({
+                        shop_id: doc.id,
+                        name: data["name"],
+                        photo_url: data["photo_url"],
+                    });
+                }
+            })
+
+            callbackSuccess(shops);
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
+
+export function getShopDetail(shopId, callbackSuccess, callbackError) {
+    db.collection("shop").doc(shopId)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                callbackSuccess(doc.data());
+            } else {
+                callbackError("Error: shop id does not exists");
+            }
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
+
+export function getProductList(shopId, callbackSuccess, callbackError) {
+    db.collection("shop").doc(shopId).collection("products")
+        .get()
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                var categories = {};
+
+                querySnapshot.forEach((doc) => {
+                    var data = doc.data();
+                    data["product_id"] = doc.id;
+
+                    data["categories"].forEach((category) => {
+                        if (!(category in categories)) {
+                            categories[category] = [];
+                        }
+
+                        categories[category].push(data);
+                    })
+                });
+
+                callbackSuccess(categories);
+            } else {
+                callbackError("Error: shop id does not exists or there are no products");
+            }
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
