@@ -7,17 +7,18 @@
     align-content: center;
     border-bottom: 1px solid lightgray;
 
-    .store-top-left-section {
-      display: flex;
-      width: 90%;
-      flex-direction: row;
-
+    .back-button-component-wrap {
       .left-chevron {
         margin-top: 0.3rem;
         margin-right: 1rem;
         width: 3vh;
         height: 3vh;
       }
+    }
+    .store-top-left-section {
+      display: flex;
+      width: 90%;
+      flex-direction: row;
 
       .store-name-category-wrap {
         display: flex;

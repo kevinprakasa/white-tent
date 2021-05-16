@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 
 import "./storePageStyle.scss";
-import BackImg from "assets/left-chevron.png";
 import { ReactComponent as Star } from "assets/star.svg";
 import Menu from "components/Menu";
 import CategorySeparator from "components/CategorySeparator";
+import BackButton from "components/BackButton";
+import { IMenuJsonListType, IOrderedItemType } from "util/interfaces";
 
 const StorePage: React.FC = () => {
   const history = useHistory();
@@ -20,13 +21,8 @@ const StorePage: React.FC = () => {
   return (
     <div className="store-page-container">
       <div className="store-top-section">
+        <BackButton />
         <div className="store-top-left-section">
-          <img
-            className="left-chevron"
-            src={BackImg}
-            alt="left-chevron"
-            onClick={() => history.goBack()}
-          />
           <div className="store-name-category-wrap">
             <p className="store-name">{shopName}</p>
             <p className="store-category">{shopCategory}</p>
@@ -72,8 +68,7 @@ const StorePage: React.FC = () => {
       </div>
 
       <CategorySeparator />
-      <Menu category={"Makanan"} />
-      <Menu category={"Minuman"} />
+      <Menu />
     </div>
   );
 };
