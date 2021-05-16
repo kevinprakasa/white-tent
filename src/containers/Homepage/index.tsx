@@ -1,12 +1,12 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
+  CardBody,
   CardActions,
   CardImage,
   CardSubtitle,
-  Avatar,
 } from "@progress/kendo-react-layout";
 import "./styles.scss";
 import {
@@ -14,179 +14,60 @@ import {
   getShopCategories,
   getMostLikedProducts,
 } from "util/FirebaseAPI";
+import { capitalize } from "helpers";
 
-const cardsData = [
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/bg_flag.jpg",
-    headerTitle: "bg_traditions",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 174,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rose_festival.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-  {
-    thumbnailSrc:
-      "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila_lakes.jpg",
-    headerTitle: "bg_mountains",
-    headerSubtitle: "Bulgaria, Europe",
-    commentsExpanded: false,
-    postLiked: false,
-    comments: [],
-    newCommentTextValue: "",
-    postLikes: 962,
-    scrollViewItems: {
-      url:
-        "https://www.telerik.com/kendo-angular-ui-develop/components/layout/card/assets/rila.jpg",
-    },
-  },
-];
+interface ShopCategories {
+  [id: string]: {
+    name: string;
+    photo_url: string;
+  };
+}
+
+interface Product {
+  categories: string[];
+  information: string;
+  name: string;
+  discount_price: number;
+  original_price: number;
+  photo_url: string;
+  total_likes?: number;
+}
+
+interface NearestShop {
+  distance: number; // in km
+  name: string;
+  photo_url: string;
+  shop_id: string;
+}
 
 export const Homepage: FC = () => {
+  const [shopCategories, setShopCategories] = useState<ShopCategories>({});
+  const [mostLikedProducts, setMostLikedProducts] = useState<Product[]>([]);
+  const [nearestShops, setNearestShops] = useState<NearestShop[]>([]);
+
   useEffect(() => {
+    const errorHandling = (error: any) => {
+      console.error(error);
+    };
     const successGetLocationCallback = (pos: GeolocationPosition) => {
-      console.log("CURRENT POSTIION", pos);
       const {
         coords: { longitude, latitude },
       } = pos;
+
+      // Fetch all data that is in homepage
       getShopCategories(
-        (res: any) => console.log("Shop categories ===>", res),
-        (err: any) => console.log(err)
+        (res: ShopCategories) => setShopCategories(res),
+        errorHandling
       );
       getNearestShops(
-        { longitude, latitude },
-        (nearestShops: any) => console.log("nearest Shops ===>", nearestShops),
-        console.log
+        latitude,
+        longitude,
+        (shops: NearestShop[]) => setNearestShops(shops),
+        errorHandling
       );
-      getMostLikedProducts((mostLikedProducts: any) => {
-        console.log("MOST LIKED PRODUCTS", mostLikedProducts);
-      }, console.log);
+      getMostLikedProducts((mostLikedProducts: Product[]) => {
+        setMostLikedProducts(mostLikedProducts);
+      }, errorHandling);
     };
 
     const errorGetLocationCallback = (error: GeolocationPositionError) => {
@@ -202,16 +83,16 @@ export const Homepage: FC = () => {
       );
     } else {
       // When current device doesn't support getting user's location
-      console.log("Geolocation is not supported by this browser");
+      console.warn("Geolocation is not supported by this browser");
     }
   }, []);
 
   return (
-    <div>
+    <div className="homepage">
       <h2>Nearest from you</h2>
 
       <div className="slider-container">
-        {cardsData.map((card, index) => {
+        {nearestShops.map((shop, index) => {
           return (
             <div className="card-wrapper" key={index}>
               <Card
@@ -225,61 +106,24 @@ export const Homepage: FC = () => {
                   className="k-hbox"
                   style={{ background: "transparent" }}
                 >
-                  <Avatar type="image" size="medium" shape="circle">
-                    <img
-                      style={{ width: 45, height: 45 }}
-                      src={card.thumbnailSrc}
-                    />
-                  </Avatar>
                   <div>
-                    <CardTitle style={{ marginBottom: "4px" }}>
-                      {card.headerTitle}
+                    <CardTitle
+                      style={{
+                        marginBottom: "4px",
+                        fontSize: "1.3em",
+                      }}
+                    >
+                      {capitalize(shop.name)}
                     </CardTitle>
                     <CardSubtitle>
-                      <p>{card.headerSubtitle}</p>
+                      <p>{shop.distance} km</p>
                     </CardSubtitle>
                   </div>
                 </CardHeader>
                 <CardImage
-                  src={card.scrollViewItems.url}
+                  src={shop.photo_url}
                   style={{ height: "185px", maxWidth: "100%" }}
                 />
-                <CardActions
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div>
-                    <button
-                      className="k-button k-flat"
-                      onClick={() => console.log("onClick 1")}
-                    >
-                      <span
-                        className={
-                          card.postLiked
-                            ? "k-icon k-i-heart"
-                            : "k-icon k-i-heart-outline"
-                        }
-                      />
-                    </button>
-                    <button
-                      className="k-button k-flat"
-                      onClick={() => console.log("onClick 2")}
-                    >
-                      <span className="k-icon k-i-comment" />
-                    </button>
-                    <button className="k-button k-flat">
-                      <span className="k-icon k-i-share" />
-                    </button>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      alignSelf: "center",
-                      color: "#656565",
-                    }}
-                  >
-                    {card.postLikes} likes
-                  </span>
-                </CardActions>
               </Card>
             </div>
           );
@@ -288,7 +132,7 @@ export const Homepage: FC = () => {
 
       <h2>Most Liked</h2>
       <div className="slider-container">
-        {cardsData.map((card, index) => {
+        {mostLikedProducts.map((product, index) => {
           return (
             <div className="card-wrapper" key={index}>
               <Card
@@ -302,23 +146,22 @@ export const Homepage: FC = () => {
                   className="k-hbox"
                   style={{ background: "transparent" }}
                 >
-                  <Avatar type="image" size="medium" shape="circle">
-                    <img
-                      style={{ width: 45, height: 45 }}
-                      src={card.thumbnailSrc}
-                    />
-                  </Avatar>
                   <div>
-                    <CardTitle style={{ marginBottom: "4px" }}>
-                      {card.headerTitle}
+                    <CardTitle
+                      style={{
+                        marginBottom: "4px",
+                        fontSize: "1.3em",
+                      }}
+                    >
+                      {capitalize(product.name)}
                     </CardTitle>
                     <CardSubtitle>
-                      <p>{card.headerSubtitle}</p>
+                      <p>{product.information}</p>
                     </CardSubtitle>
                   </div>
                 </CardHeader>
                 <CardImage
-                  src={card.scrollViewItems.url}
+                  src={product.photo_url}
                   style={{ height: "185px", maxWidth: "100%" }}
                 />
                 <CardActions
@@ -331,20 +174,9 @@ export const Homepage: FC = () => {
                     >
                       <span
                         className={
-                          card.postLiked
-                            ? "k-icon k-i-heart"
-                            : "k-icon k-i-heart-outline"
+                          true ? "k-icon k-i-heart" : "k-icon k-i-heart-outline"
                         }
                       />
-                    </button>
-                    <button
-                      className="k-button k-flat"
-                      onClick={() => console.log("onClick 2")}
-                    >
-                      <span className="k-icon k-i-comment" />
-                    </button>
-                    <button className="k-button k-flat">
-                      <span className="k-icon k-i-share" />
                     </button>
                   </div>
                   <span
@@ -354,7 +186,7 @@ export const Homepage: FC = () => {
                       color: "#656565",
                     }}
                   >
-                    {card.postLikes} likes
+                    {product.total_likes ?? 0} likes
                   </span>
                 </CardActions>
               </Card>
@@ -364,9 +196,9 @@ export const Homepage: FC = () => {
       </div>
       <h2>By category</h2>
       <div className="slider-container">
-        {cardsData.map((card, index) => {
+        {Object.keys(shopCategories).map((id) => {
           return (
-            <div className="card-wrapper" key={index}>
+            <div className="card-wrapper" key={id}>
               <Card
                 style={{
                   width: 260,
@@ -374,65 +206,15 @@ export const Homepage: FC = () => {
                   marginTop: "15px",
                 }}
               >
-                <CardHeader
-                  className="k-hbox"
-                  style={{ background: "transparent" }}
-                >
-                  <Avatar type="image" size="medium" shape="circle">
-                    <img
-                      style={{ width: 45, height: 45 }}
-                      src={card.thumbnailSrc}
-                    />
-                  </Avatar>
-                  <div>
-                    <CardTitle style={{ marginBottom: "4px" }}>
-                      {card.headerTitle}
-                    </CardTitle>
-                    <CardSubtitle>
-                      <p>{card.headerSubtitle}</p>
-                    </CardSubtitle>
-                  </div>
-                </CardHeader>
                 <CardImage
-                  src={card.scrollViewItems.url}
+                  src={shopCategories[id].photo_url}
                   style={{ height: "185px", maxWidth: "100%" }}
                 />
-                <CardActions
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div>
-                    <button
-                      className="k-button k-flat"
-                      onClick={() => console.log("onClick 1")}
-                    >
-                      <span
-                        className={
-                          card.postLiked
-                            ? "k-icon k-i-heart"
-                            : "k-icon k-i-heart-outline"
-                        }
-                      />
-                    </button>
-                    <button
-                      className="k-button k-flat"
-                      onClick={() => console.log("onClick 2")}
-                    >
-                      <span className="k-icon k-i-comment" />
-                    </button>
-                    <button className="k-button k-flat">
-                      <span className="k-icon k-i-share" />
-                    </button>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "13px",
-                      alignSelf: "center",
-                      color: "#656565",
-                    }}
-                  >
-                    {card.postLikes} likes
-                  </span>
-                </CardActions>
+                <CardBody style={{ textAlign: "center" }}>
+                  <CardTitle style={{ fontSize: "1em" }}>
+                    {capitalize(shopCategories[id].name)}
+                  </CardTitle>
+                </CardBody>
               </Card>
             </div>
           );

@@ -12,6 +12,7 @@
     "@progress/kendo-react-inputs": "^4.5.0",
     "@progress/kendo-react-intl": "^4.5.0",
     "@progress/kendo-react-layout": "^4.5.0",
+    "@progress/kendo-react-popup": "^4.6.0",
     "@progress/kendo-react-progressbars": "^4.5.0",
     "@progress/kendo-theme-material": "^3.33.1",
     "@reduxjs/toolkit": "^1.5.1",

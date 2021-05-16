@@ -27,4 +27,20 @@ html {
   .k-badge-container {
     margin-right: 8px;
   }
+  .nav-links-mobile {
+    display: none;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .nav-links {
+      display: none;
+    }
+    .nav-links-mobile {
+      display: block;
+    }
+  }
+}
+
+.popup-nav-link {
+  margin: 1em;
 }
