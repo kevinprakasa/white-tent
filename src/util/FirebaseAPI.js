@@ -285,3 +285,42 @@ export function getProductList(shopId, callbackSuccess, callbackError) {
       callbackError(error);
     });
 }
+
+export function createOrder(data, callbackSuccess, callbackError) {
+    var user = firebase.auth().currentUser;
+
+    if (user == null) {
+        callbackError("Error: User not logged in");
+        return;
+    }
+
+    var counterRef = db.collection("counter").doc("order");
+    var orderRef = db.collection("users").doc(user.uid).collection("order").doc();
+
+    db.runTransaction((transaction) => {
+        return transaction.get(counterRef).then((counterDoc) => {
+            var incrementNumber = counterDoc.data()["value"] + 1;
+
+            data["order_id"] = `WT_${incrementNumber}`;
+            data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
+            data["status"] = "active";
+
+            transaction.set(orderRef, data);
+            transaction.update(counterRef, {value : incrementNumber});
+        });
+    })
+    .then(() => {
+        orderRef.get()
+            .then((doc) => {
+                var data = doc.data();
+                data["created_at"] = data["created_at"].toDate();
+                callbackSuccess(data);
+            })
+            .catch((error) => {
+                callbackError(error);
+            });
+    })
+    .catch((error) => {
+        callbackError(error);
+    });
+}
