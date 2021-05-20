@@ -15,9 +15,10 @@ import {
   IOrderedItemType,
   IMenuItemType,
 } from "util/interfaces";
-import { getProductList } from "util/FirebaseAPI";
+import { getProductList, createOrder } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
+import { useHistory } from "react-router";
 
 export interface IMenuProps {
   shopName: string;
@@ -30,6 +31,8 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [isFooterHidden, setIsFooterHidden] = useState(false);
 
   const localCartKey = `WHITE_TENT-CART`;
+
+  const history = useHistory();
 
   useEffect(() => {
     getProductList(
@@ -195,7 +198,6 @@ const Menu: React.FC<IMenuProps> = (props) => {
   }
 
   const orderCartCount = Object.keys(orderItemObj).length;
-  console.log(orderItemObj);
 
   const countTotalPrice = () => {
     if (orderCartCount === 0) return 0;
@@ -225,6 +227,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
         <div
           className="menu-order-footer"
           style={{ opacity: `${isFooterHidden ? 0 : 1}` }}
+          onClick={() => history.push("/order")}
         >
           <div className="menu-order-left">
             <p className="order-count">{orderCartCount} items</p>

@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { isUserLoggedIn } from "util/FirebaseAPI";
 import { Popup } from "@progress/kendo-react-popup";
 import StorePage from "containers/StorePage";
+import OrderPage from "containers/OrderPage";
 
 let kendokaAvatar =
   "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
@@ -182,6 +183,9 @@ function App() {
             </Route>
             <Route path="/store">
               <StorePage />
+            </Route>
+            <Route path="/order">
+              <OrderPage />
             </Route>
             <Route path="/">
               <Homepage />
