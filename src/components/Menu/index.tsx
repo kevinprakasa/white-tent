@@ -15,24 +15,23 @@ import {
   IOrderedItemType,
   IMenuItemType,
 } from "util/interfaces";
-import {
-  getProductList,
-  getUserData,
-  isUserLoggedIn,
-  signOut,
-} from "util/FirebaseAPI";
+import { getProductList } from "util/FirebaseAPI";
 
-export interface IMenuProps {}
+import { formatRupiah } from "util/utils";
+
+export interface IMenuProps {
+  shopName: string;
+}
 
 const Menu: React.FC<IMenuProps> = (props) => {
   const [orderedItemCount, setOrderedItemCount] = useState(0);
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
+  const [isFooterHidden, setIsFooterHidden] = useState(false);
 
   const localCartKey = `WHITE_TENT-CART`;
 
   useEffect(() => {
-    // console.log(isUserLoggedIn());
     getProductList(
       "3nK7ah7sp6hzyBZM170A",
       (res: any) => {
@@ -44,7 +43,6 @@ const Menu: React.FC<IMenuProps> = (props) => {
     // add product to local
     const orderData = localStorage.getItem(localCartKey);
     if (orderData) {
-      console.log("from local", JSON.parse(orderData));
       setOrderItemObj(JSON.parse(orderData));
     }
   }, [localCartKey]);
@@ -52,11 +50,9 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const handleAddClick = (e: any, item: IMenuItemType) => {
     e.preventDefault();
     const orderedProductId = e.target.id;
-    console.log("add", e.target.id);
 
     item.orderAmount = item.orderAmount + 1;
     orderItemObj[`${orderedProductId}`] = item;
-    console.log("toSave", orderItemObj);
 
     localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
@@ -67,8 +63,11 @@ const Menu: React.FC<IMenuProps> = (props) => {
     e.preventDefault();
     const orderedProductId = e.target.id;
     item.orderAmount = item.orderAmount - 1;
-    orderItemObj[`${orderedProductId}`] = item;
-    console.log("toSave", orderItemObj);
+    if (item.orderAmount === 0) {
+      delete orderItemObj[`${orderedProductId}`];
+    } else {
+      orderItemObj[`${orderedProductId}`] = item;
+    }
 
     localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
@@ -76,15 +75,14 @@ const Menu: React.FC<IMenuProps> = (props) => {
   };
 
   const itemRender = (props: any) => {
-    const { dataItem, index } = props;
+    const dataItem: IMenuItemType = props.dataItem;
+
     if (orderItemObj[dataItem.product_id]) {
-      // console.log("ya", orderItemObj[dataItem.product_id].orderAmount);
-      dataItem.orderAmount = orderItemObj[dataItem.product_id].orderAmount;
-      // console.log(dataItem.orderAmount);
+      dataItem.orderAmount = orderItemObj[dataItem.product_id].orderAmount; // add optional orderAmount field
     } else {
       dataItem.orderAmount = 0;
     }
-    console.log("hiyahiya", dataItem);
+
     return (
       <Card
         orientation={"vertical"}
@@ -102,7 +100,20 @@ const Menu: React.FC<IMenuProps> = (props) => {
                 {dataItem.information}
               </CardSubtitle>
               <div className="price-add-btn-wrap">
-                <p className="price">{dataItem.original_price}</p>
+                <div>
+                  <p
+                    className={`price ${
+                      dataItem.discount_price ? "slashed" : ""
+                    }`}
+                  >
+                    {formatRupiah(dataItem.original_price)}
+                  </p>
+                  {dataItem.discount_price && (
+                    <p className="price">
+                      {formatRupiah(dataItem.discount_price)}
+                    </p>
+                  )}
+                </div>
                 <CardActions layout={"end"}>
                   {dataItem.orderAmount > 0 ? (
                     <>
@@ -154,20 +165,26 @@ const Menu: React.FC<IMenuProps> = (props) => {
     );
   };
 
+  const { shopName } = props;
+
   const menuRender: any = [];
+  let keyIdx = 0;
   if (menuListObj !== undefined) {
-    // console.log("asd", menuListObj);
     Object.keys(menuListObj).forEach((category) => {
       const menu = menuListObj[category];
-      // console.log(menu);
       const header = () => {
         return (
-          <ListViewHeader className="menu-header">{category}</ListViewHeader>
+          <ListViewHeader
+            className="menu-header"
+            style={{ textTransform: "capitalize" }}
+          >
+            {category}
+          </ListViewHeader>
         );
       };
       menuRender.push(
         <ListView
-          key={`${menuListObj}-${menu[0].product_id}`}
+          key={`${menu}-${keyIdx++}`}
           data={menu}
           item={itemRender}
           header={header}
@@ -176,8 +193,50 @@ const Menu: React.FC<IMenuProps> = (props) => {
       );
     });
   }
-  console.log("render\n", orderItemObj);
-  return <div className="menu-container">{menuRender}</div>;
+
+  const orderCartCount = Object.keys(orderItemObj).length;
+  console.log(orderItemObj);
+
+  const countTotalPrice = () => {
+    if (orderCartCount === 0) return 0;
+    let total: number = 0;
+    for (const key in orderItemObj) {
+      // console.log(key);
+      const ordered = orderItemObj[`${key}`];
+      const price = ordered.discount_price
+        ? ordered.discount_price
+        : ordered.original_price;
+      total += Number(price);
+    }
+    return total;
+  };
+
+  return (
+    <>
+      <div
+        className="menu-container"
+        style={{
+          paddingBottom: `${orderCartCount === 0 ? "0rem" : "4rem"}`,
+        }}
+      >
+        {menuRender}
+      </div>
+      {orderCartCount > 0 && (
+        <div
+          className="menu-order-footer"
+          style={{ opacity: `${isFooterHidden ? 0 : 1}` }}
+        >
+          <div className="menu-order-left">
+            <p className="order-count">{orderCartCount} items</p>
+            <p className="store-name">{shopName}</p>
+          </div>
+          <div className="subtotal-price">
+            {formatRupiah(countTotalPrice(), "Rp")}
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Menu;

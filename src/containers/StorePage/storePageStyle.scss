@@ -1,78 +1,43 @@
 .store-page-container {
-  .store-top-section {
-    padding: 1rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-content: center;
-    border-bottom: 1px solid lightgray;
-
-    .back-button-component-wrap {
-      .left-chevron {
-        margin-top: 0.3rem;
-        margin-right: 1rem;
-        width: 3vh;
-        height: 3vh;
-      }
-    }
-    .store-top-left-section {
-      display: flex;
-      width: 90%;
-      flex-direction: row;
-
-      .store-name-category-wrap {
-        display: flex;
-        flex-direction: column;
-        p {
-          margin: 0;
-        }
-
-        .store-name {
-          font-size: 28px;
-          font-weight: bold;
-          margin-bottom: 0.5rem;
-        }
-      }
-    }
-
-    .store-photo-section {
-      display: flex;
-      align-items: center;
-      // width: 10vh;
-      img {
-        object-fit: cover;
-        border-radius: 4px;
-        width: 10vh;
-        height: 10vh;
-      }
+  padding: 1rem;
+  .back-button-component-wrap {
+    margin: 1rem 0 2rem;
+    img {
+      width: 6vw;
     }
   }
 
-  .sliding-store-detail {
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    border-bottom: 1px solid lightgray;
+  .store-card {
+    min-height: 16vh;
+    border-radius: 20px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0px 1px 10px 0px #00000029;
 
-    .store-rating-wrap {
-      padding: 0 1rem;
-      text-align: center;
-      .rating-icon-container {
+    .store-card-left {
+      width: 100%;
+      font-size: 24px;
+      color: #303030;
+
+      .store-location-wrap {
+        font-size: 14px;
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-
+        align-items: center;
+        color: #ffc107;
+        font-weight: normal;
         svg {
-          margin-right: 0.5rem;
-          width: 2vh;
-          fill: gold;
+          margin-right: 0.3rem;
+          width: 3vw;
+          height: auto;
+          fill: #ffc107;
         }
       }
     }
-    .separator {
-      content: "";
-      border-left: 1px solid gray;
+
+    .store-card-right {
+      img {
+        width: 6vw;
+      }
     }
   }
 }
