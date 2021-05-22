@@ -362,3 +362,63 @@ export function getShopsByCategoryName(categoryName, callbackSuccess, callbackEr
       callbackError(error);
     });
 }
+
+export async function getJsonFile() {
+    const whiteTentData = {
+        shops : [],
+        orders : []
+    };
+
+    const shops = await db.collection("shop").get();
+
+    for (let i in shops.docs) {
+        let doc = shops.docs[i];
+        let data = doc.data();
+
+        let shop = {
+            categories : data["categories"],
+            name : data["name"],
+            total_likes : parseInt(data["total_likes"]),
+        };
+
+        const products = await db.collection("shop").doc(doc.id).collection("products").get();
+
+        shop["products"] = [];
+
+        products.forEach((doc) => {
+            let data = doc.data();
+
+            let discount = (data["original_price"] - data["discount_price"]) / data["original_price"];
+            discount = Math.round(discount * 100) / 100;
+
+            shop["products"].push({
+                name : data["name"],
+                discount_price : data["discount_price"],
+                original_price : data["original_price"],
+                discount : discount,
+                categories : data["categories"]
+            });
+        })
+
+        const orders = await db.collectionGroup("order").where("shop_id", "==", doc.id).get();
+
+        shop["total_transaction"] = orders.size;
+
+        whiteTentData["shops"].push(shop);
+    }
+
+    const orders = await db.collectionGroup("order").get();
+    
+    orders.forEach((doc) => {
+        let data = doc.data();
+
+        whiteTentData["orders"].push({
+            shop_id : data["shop_id"],
+            total_price : data["total_price"],
+            status : data["status"]
+        });
+    });
+
+    const fs = require('fs');
+    fs.writeFileSync('white_tent_data.json', JSON.stringify(whiteTentData));
+}
