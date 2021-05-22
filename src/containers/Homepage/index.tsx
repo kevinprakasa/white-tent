@@ -15,6 +15,7 @@ import {
   getMostLikedProducts,
 } from "util/FirebaseAPI";
 import { capitalize } from "helpers";
+import { useHistory } from "react-router";
 
 interface ShopCategories {
   [id: string]: {
@@ -41,6 +42,7 @@ interface NearestShop {
 }
 
 export const Homepage: FC = () => {
+  const { push } = useHistory();
   const [shopCategories, setShopCategories] = useState<ShopCategories>({});
   const [mostLikedProducts, setMostLikedProducts] = useState<Product[]>([]);
   const [nearestShops, setNearestShops] = useState<NearestShop[]>([]);
@@ -94,7 +96,11 @@ export const Homepage: FC = () => {
       <div className="slider-container">
         {nearestShops.map((shop, index) => {
           return (
-            <div className="card-wrapper" key={index}>
+            <div
+              className="card-wrapper"
+              key={index}
+              onClick={() => push(`/store/${shop.shop_id}`)}
+            >
               <Card
                 style={{
                   width: 260,

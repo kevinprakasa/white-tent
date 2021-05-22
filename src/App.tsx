@@ -181,13 +181,13 @@ function App() {
             <Route path="/signup">
               <SignupPage />
             </Route>
-            <Route path="/store">
+            <Route path="/store/:id">
               <StorePage />
             </Route>
             <Route path="/order">
               <OrderPage />
             </Route>
-            <Route path="/">
+            <Route path="/" exact>
               <Homepage />
             </Route>
           </Switch>

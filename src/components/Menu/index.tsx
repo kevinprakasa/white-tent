@@ -21,6 +21,7 @@ import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
 
 export interface IMenuProps {
+  shopId: string;
   shopName: string;
 }
 
@@ -29,6 +30,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
   const [isFooterHidden, setIsFooterHidden] = useState(false);
+  const { shopName, shopId } = props;
 
   const localCartKey = `WHITE_TENT-CART`;
 
@@ -36,7 +38,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
 
   useEffect(() => {
     getProductList(
-      "3nK7ah7sp6hzyBZM170A",
+      shopId,
       (res: any) => {
         setMenuListObj(res);
       },
@@ -167,8 +169,6 @@ const Menu: React.FC<IMenuProps> = (props) => {
       </Card>
     );
   };
-
-  const { shopName } = props;
 
   const menuRender: any = [];
   let keyIdx = 0;

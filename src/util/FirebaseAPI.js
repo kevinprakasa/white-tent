@@ -236,13 +236,26 @@ export function getShopsByName(target, callbackSuccess, callbackError) {
     });
 }
 
-export function getShopDetail(shopId, callbackSuccess, callbackError) {
+export function getShopDetail(
+  shopId,
+  userLocation,
+  callbackSuccess,
+  callbackError
+) {
   db.collection("shop")
     .doc(shopId)
     .get()
     .then((doc) => {
       if (doc.exists) {
-        callbackSuccess(doc.data());
+        const data = doc.data();
+        const { longitude, latitude } = userLocation;
+        const distance = getDistance(
+          latitude,
+          longitude,
+          data["coordinate"]["latitude"],
+          data["coordinate"]["longitude"]
+        );
+        callbackSuccess({ ...doc.data(), distance });
       } else {
         callbackError("Error: shop id does not exists");
       }
@@ -287,40 +300,41 @@ export function getProductList(shopId, callbackSuccess, callbackError) {
 }
 
 export function createOrder(data, callbackSuccess, callbackError) {
-    var user = firebase.auth().currentUser;
+  var user = firebase.auth().currentUser;
 
-    if (user == null) {
-        callbackError("Error: User not logged in");
-        return;
-    }
+  if (user == null) {
+    callbackError("Error: User not logged in");
+    return;
+  }
 
-    var counterRef = db.collection("counter").doc("order");
-    var orderRef = db.collection("users").doc(user.uid).collection("order").doc();
+  var counterRef = db.collection("counter").doc("order");
+  var orderRef = db.collection("users").doc(user.uid).collection("order").doc();
 
-    db.runTransaction((transaction) => {
-        return transaction.get(counterRef).then((counterDoc) => {
-            var incrementNumber = counterDoc.data()["value"] + 1;
+  db.runTransaction((transaction) => {
+    return transaction.get(counterRef).then((counterDoc) => {
+      var incrementNumber = counterDoc.data()["value"] + 1;
 
-            data["order_id"] = `WT_${incrementNumber}`;
-            data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
-            data["status"] = "active";
+      data["order_id"] = `WT_${incrementNumber}`;
+      data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
+      data["status"] = "active";
 
-            transaction.set(orderRef, data);
-            transaction.update(counterRef, {value : incrementNumber});
+      transaction.set(orderRef, data);
+      transaction.update(counterRef, { value: incrementNumber });
+    });
+  })
+    .then(() => {
+      orderRef
+        .get()
+        .then((doc) => {
+          var data = doc.data();
+          data["created_at"] = data["created_at"].toDate();
+          callbackSuccess(data);
+        })
+        .catch((error) => {
+          callbackError(error);
         });
     })
-    .then(() => {
-        orderRef.get()
-            .then((doc) => {
-                var data = doc.data();
-                data["created_at"] = data["created_at"].toDate();
-                callbackSuccess(data);
-            })
-            .catch((error) => {
-                callbackError(error);
-            });
-    })
     .catch((error) => {
-        callbackError(error);
+      callbackError(error);
     });
 }

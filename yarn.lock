@@ -1833,11 +1833,7 @@
     "@progress/kendo-react-common" "4.5.0"
     prop-types "^15.6.0"
 
-<<<<<<< HEAD
-"@progress/kendo-react-popup@^4.6.0":
-=======
 "@progress/kendo-react-popup@4.6.0":
->>>>>>> a05d367db8ff42c4ccf5cd87d28bb01e21127963
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-react-popup/-/kendo-react-popup-4.6.0.tgz#ab79744ed701d8e1f9c700f38e962c2823bcfa03"
   integrity sha512-EmX8C07z+I1X62De0osykUoO2oEsdnUvshy7J2Cp3pDxpbfc+MxzPUkzDAiuS6liDrFLeBomkDHklSdrjr3LGg==
