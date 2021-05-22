@@ -1,22 +1,28 @@
+import React, { Suspense, useEffect, useRef, useState } from "react";
+import { isUserLoggedIn, signOut } from "util/FirebaseAPI";
+
 import "./App.scss";
 import "@progress/kendo-theme-material/dist/all.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Homepage } from "containers/Homepage";
 import {
   AppBar,
   AppBarSection,
   AppBarSpacer,
   Avatar,
 } from "@progress/kendo-react-layout";
-import LoginPage from "containers/LoginPage";
-import SignupPage from "containers/SignupPage";
-import AppLogoWhite from "assets/logo-white.svg";
-import { useEffect, useRef, useState } from "react";
-import { isUserLoggedIn, signOut } from "util/FirebaseAPI";
 import { Popup } from "@progress/kendo-react-popup";
-import StorePage from "containers/StorePage";
-import OrderPage from "containers/OrderPage";
-import TransactionCompletePage from "containers/TransactionCompletePage";
+import { Loader } from "@progress/kendo-react-indicators";
+
+import AppLogoWhite from "assets/logo-white.svg";
+
+const Homepage = React.lazy(() => import("containers/Homepage"));
+const LoginPage = React.lazy(() => import("containers/LoginPage"));
+const SignupPage = React.lazy(() => import("containers/SignupPage"));
+const StorePage = React.lazy(() => import("containers/StorePage"));
+const OrderPage = React.lazy(() => import("containers/OrderPage"));
+const TransactionCompletePage = React.lazy(
+  () => import("containers/TransactionCompletePage")
+);
 
 let kendokaAvatar =
   "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
@@ -32,6 +38,20 @@ function App() {
   useEffect(() => {
     setIsUserLoggedInState(isUserLoggedIn());
   }, []);
+
+  const loader = (
+    <div
+      style={{
+        width: "100%",
+        height: "50vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Loader size={"large"} type={"infinite-spinner"} />
+    </div>
+  );
 
   return (
     <div className="App">
@@ -194,22 +214,34 @@ function App() {
             renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/login">
-              <LoginPage />
+              <Suspense fallback={loader}>
+                <LoginPage />
+              </Suspense>
             </Route>
             <Route path="/signup">
-              <SignupPage />
+              <Suspense fallback={loader}>
+                <SignupPage />
+              </Suspense>
             </Route>
             <Route path="/store/:id">
-              <StorePage />
+              <Suspense fallback={loader}>
+                <StorePage />
+              </Suspense>
             </Route>
             <Route path="/order/:id">
-              <OrderPage />
+              <Suspense fallback={loader}>
+                <OrderPage />
+              </Suspense>
             </Route>
             <Route path="/transaction/:id">
-              <TransactionCompletePage />
+              <Suspense fallback={loader}>
+                <TransactionCompletePage />
+              </Suspense>
             </Route>
             <Route path="/" exact>
-              <Homepage />
+              <Suspense fallback={loader}>
+                <Homepage />
+              </Suspense>
             </Route>
           </Switch>
         </div>
