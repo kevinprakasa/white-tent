@@ -307,19 +307,25 @@ export function createOrder(data, callbackSuccess, callbackError) {
   }
 
   var counterRef = db.collection("counter").doc("order");
+  var totalSaveRef = db.collection("counter").doc("total_save");
   var orderRef = db.collection("users").doc(user.uid).collection("order").doc();
 
-  db.runTransaction((transaction) => {
-    return transaction.get(counterRef).then((counterDoc) => {
-      var incrementNumber = counterDoc.data()["value"] + 1;
+  db.runTransaction(async (transaction) => {
+        var counterDoc = await transaction.get(counterRef);
+        var totalSaveDoc = await transaction.get(totalSaveRef);
 
-      data["order_id"] = `WT_${incrementNumber}`;
-      data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
-      data["status"] = "active";
+        var incrementNumber = counterDoc.data()["value"] + 1;
+        var newTotalSave = totalSaveDoc.data()["value"] + data["total_save"];
 
-      transaction.set(orderRef, data);
-      transaction.update(counterRef, { value: incrementNumber });
-    });
+        data["order_id"] = `WT_${incrementNumber}`;
+        data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
+        data["status"] = "active";
+
+        transaction.set(orderRef, data);
+        transaction.update(counterRef, { value: incrementNumber });
+        transaction.update(totalSaveRef, { value: newTotalSave });
+        
+        return Promise.resolve(true);
   })
     .then(() => {
       orderRef
