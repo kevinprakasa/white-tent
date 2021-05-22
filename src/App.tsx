@@ -12,10 +12,11 @@ import LoginPage from "containers/LoginPage";
 import SignupPage from "containers/SignupPage";
 import AppLogoWhite from "assets/logo-white.svg";
 import { useEffect, useRef, useState } from "react";
-import { isUserLoggedIn } from "util/FirebaseAPI";
+import { isUserLoggedIn, signOut } from "util/FirebaseAPI";
 import { Popup } from "@progress/kendo-react-popup";
 import StorePage from "containers/StorePage";
 import OrderPage from "containers/OrderPage";
+import TransactionCompletePage from "containers/TransactionCompletePage";
 
 let kendokaAvatar =
   "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
@@ -91,6 +92,23 @@ function App() {
                         <Link to="/login" style={{ textDecoration: "none" }}>
                           Favourites
                         </Link>
+                      </div>
+                      <div
+                        className="popup-nav-link"
+                        style={{ fontWeight: "bold" }}
+                        onClick={() => {
+                          signOut(
+                            (res: any) => {
+                              console.log(res);
+                              window.location.reload();
+                            },
+                            (err: any) => {
+                              console.error(err);
+                            }
+                          );
+                        }}
+                      >
+                        Logout
                       </div>
                     </>
                   )}
@@ -184,8 +202,11 @@ function App() {
             <Route path="/store/:id">
               <StorePage />
             </Route>
-            <Route path="/order">
+            <Route path="/order/:id">
               <OrderPage />
+            </Route>
+            <Route path="/transaction/:id">
+              <TransactionCompletePage />
             </Route>
             <Route path="/" exact>
               <Homepage />

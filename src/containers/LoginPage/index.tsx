@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
         setRenderDialog(
           <DialogComponent
             title={"Success"}
-            body={"redirecting to home..."}
+            body={"redirect to home"}
             handleClose={() => {
               history.push("/");
               setRenderDialog(<></>);

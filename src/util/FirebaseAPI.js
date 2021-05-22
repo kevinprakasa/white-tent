@@ -277,7 +277,6 @@ export function getProductList(shopId, callbackSuccess, callbackError) {
         querySnapshot.forEach((doc) => {
           var data = doc.data();
           data["product_id"] = doc.id;
-
           data["categories"].forEach((category) => {
             if (!(category in categories)) {
               categories[category] = [];

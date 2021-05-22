@@ -110,13 +110,14 @@ export const Homepage: FC = () => {
               >
                 <CardHeader
                   className="k-hbox"
-                  style={{ background: "transparent" }}
+                  style={{ background: "transparent", minHeight: "12vh" }}
                 >
                   <div>
                     <CardTitle
                       style={{
                         marginBottom: "4px",
                         fontSize: "1.3em",
+                        minHeight: "5vh",
                       }}
                     >
                       {capitalize(shop.name)}
@@ -146,11 +147,12 @@ export const Homepage: FC = () => {
                   width: 260,
                   boxShadow: "0 0 4px 0 rgba(0, 0, 0, .1)",
                   marginTop: "15px",
+                  minHeight: "38vh",
                 }}
               >
                 <CardHeader
                   className="k-hbox"
-                  style={{ background: "transparent" }}
+                  style={{ background: "transparent", minHeight: "8vh" }}
                 >
                   <div>
                     <CardTitle

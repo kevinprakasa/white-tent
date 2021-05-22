@@ -19,6 +19,7 @@ import { getProductList, createOrder } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
+import { localCartKey, localCartShopKey } from "util/constants";
 
 export interface IMenuProps {
   shopId: string;
@@ -32,22 +33,25 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [isFooterHidden, setIsFooterHidden] = useState(false);
   const { shopName, shopId } = props;
 
-  const localCartKey = `WHITE_TENT-CART`;
-
   const history = useHistory();
+  const shopOrdered = localStorage.getItem(localCartShopKey);
+  const orderData = localStorage.getItem(localCartKey);
 
   useEffect(() => {
+    console.log(shopId);
     getProductList(
       shopId,
       (res: any) => {
+        console.log("asd", res);
         setMenuListObj(res);
       },
-      () => {}
+      (err: any) => {
+        console.error(err);
+      }
     );
 
     // add product to local
-    const orderData = localStorage.getItem(localCartKey);
-    if (orderData) {
+    if (shopOrdered === shopName && orderData) {
       setOrderItemObj(JSON.parse(orderData));
     }
   }, [localCartKey]);
@@ -57,6 +61,11 @@ const Menu: React.FC<IMenuProps> = (props) => {
     const orderedProductId = e.target.id;
 
     item.orderAmount = item.orderAmount + 1;
+    if (shopOrdered !== shopName) {
+      // if cart different from current shop replace with new one
+      localStorage.removeItem(localCartKey);
+      localStorage.setItem(localCartShopKey, shopName);
+    }
     orderItemObj[`${orderedProductId}`] = item;
 
     localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
@@ -223,11 +232,11 @@ const Menu: React.FC<IMenuProps> = (props) => {
       >
         {menuRender}
       </div>
-      {orderCartCount > 0 && (
+      {orderCartCount > 0 && shopOrdered === shopName && (
         <div
           className="menu-order-footer"
           style={{ opacity: `${isFooterHidden ? 0 : 1}` }}
-          onClick={() => history.push("/order")}
+          onClick={() => history.push(`/order/${shopId}`)}
         >
           <div className="menu-order-left">
             <p className="order-count">{orderCartCount} items</p>
