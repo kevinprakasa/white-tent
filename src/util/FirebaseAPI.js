@@ -337,3 +337,28 @@ export function createOrder(data, callbackSuccess, callbackError) {
       callbackError(error);
     });
 }
+
+export function getShopsByCategoryName(categoryName, callbackSuccess, callbackError) {
+  const shops = [];
+
+  db.collection("shop")
+    .where("categories", "array-contains", categoryName)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var data = doc.data();
+
+        shops.push({
+            shop_id: doc.id,
+            name: data["name"],
+            photo_url: data["photo_url"],
+            categories: data["categories"]
+          });
+      });
+
+      callbackSuccess(shops);
+    })
+    .catch((error) => {
+      callbackError(error);
+    });
+}
