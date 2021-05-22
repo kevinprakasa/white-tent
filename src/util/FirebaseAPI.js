@@ -428,3 +428,15 @@ export async function getJsonFile() {
     const fs = require('fs');
     fs.writeFileSync('white_tent_data.json', JSON.stringify(whiteTentData));
 }
+
+export function getTotalSaveTransaction(callbackSuccess, callbackError) {
+    db.collection("counter").doc("total_save").get()
+        .then((doc) => {
+            callbackSuccess({
+                total_save : doc.data()["value"]
+            });
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
