@@ -4,10 +4,14 @@ export default class ReportViewer extends Component {
     // The componentDidMount() method runs after the component output has been rendered to the DOM. 
     componentDidMount() {
         window.jQuery('#reportViewer1')
-            .telerik_ReportViewer({
-                serviceUrl: 'https://demos.telerik.com/reporting/api/reports/',
+            .telerik_ReportViewer({ 
+                reportServer: {
+                    url: "http://desktop-dtv4bsb:83",
+                    username: "misaeljonathann",
+                    password: "whitetent"
+                },
                 reportSource: {
-                    report: 'ReportBook.trbp'
+                    report: 'Samples/Dashboard'
                 },
                 scale: 1.0,
                 viewMode: 'INTERACTIVE',
