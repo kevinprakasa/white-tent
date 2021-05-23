@@ -141,3 +141,70 @@
     font-weight: bold;
   }
 }
+
+@media only screen and (min-width: 1024px) {
+  .menu-container {
+    // padding-bottom: 4rem;
+
+    .chip-like {
+      font-size: 14px;
+    }
+
+    .plus-min {
+      font-size: 14px;
+    }
+
+    .menu-card {
+      .menu-top {
+        .menu-photo-text-wrap {
+          .menu-item-img-wrap {
+            .menu-item-text-wrap {
+              .menu-title {
+                font-size: 18px;
+              }
+
+              .menu-subtitle {
+                font-size: 16px;
+              }
+
+              .price-add-btn-wrap {
+                .price {
+                  font-size: 20px;
+                }
+                .slashed {
+                  font-size: 16px;
+                }
+              }
+            }
+          }
+
+          .like-icon-wrap {
+            img {
+              width: 3vh;
+            }
+          }
+        }
+      }
+    }
+  }
+  .menu-header {
+    font-size: 22px;
+  }
+
+  .menu-order-footer {
+    width: 50%;
+    margin: 0 auto;
+    bottom: 0;
+    left: 25%;
+
+    .menu-order-left {
+      p {
+        margin: 0;
+        font-size: 18px;
+      }
+    }
+    .subtotal-price {
+      font-size: 24px;
+    }
+  }
+}
