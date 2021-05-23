@@ -455,3 +455,31 @@ export function getTotalSaveTransaction(callbackSuccess, callbackError) {
       callbackError(error);
     });
 }
+
+export function getLastActiveTransaction(callbackSuccess, callbackError) {
+    var user = firebase.auth().currentUser;
+
+    if (user == null) {
+        callbackError("Error: User not logged in");
+        return;
+    }
+
+    db.collection("users").doc(user.uid).collection("order")
+        .where("status", "==", "active")
+        .orderBy("created_at", "desc")
+        .limit(1)
+        .get()
+        .then((querySnapshot) => {
+            var data = null;
+
+            for (let i in querySnapshot.docs) {
+               data = querySnapshot.docs[i].data();
+               data["created_at"] = data["created_at"].toDate();
+            }
+
+            callbackSuccess(data);
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
