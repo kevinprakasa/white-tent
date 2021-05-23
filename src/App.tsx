@@ -8,7 +8,6 @@ import {
   AppBar,
   AppBarSection,
   AppBarSpacer,
-  Avatar,
 } from "@progress/kendo-react-layout";
 import { Popup } from "@progress/kendo-react-popup";
 import { Loader } from "@progress/kendo-react-indicators";
@@ -24,9 +23,6 @@ const TransactionCompletePage = React.lazy(
   () => import("containers/TransactionCompletePage")
 );
 
-let kendokaAvatar =
-  "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
-
 function App() {
   const [isUserLoggedInState, setIsUserLoggedInState] = useState(false);
   const [isShowMobileNavLinks, setIsShowMobileNavLinks] = useState(false);
@@ -35,10 +31,11 @@ function App() {
     setIsShowMobileNavLinks(!isShowMobileNavLinks);
   };
 
+  const isUserLoggedInFirebase = isUserLoggedIn();
+
   useEffect(() => {
-    console.log(isUserLoggedIn());
-    setIsUserLoggedInState(isUserLoggedIn());
-  }, []);
+    setIsUserLoggedInState(isUserLoggedInFirebase);
+  }, [isUserLoggedInFirebase]);
 
   const loader = (
     <div
@@ -196,14 +193,6 @@ function App() {
                       </Link>
                     </li>
                   </ul>
-                </AppBarSection>
-                <AppBarSection>
-                  <span className="k-appbar-separator" />
-                </AppBarSection>
-                <AppBarSection>
-                  <Avatar shape="circle" type="image">
-                    <img src={kendokaAvatar} alt="avatar-logo" />
-                  </Avatar>
                 </AppBarSection>
               </>
             )}
