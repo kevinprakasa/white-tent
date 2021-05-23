@@ -1,6 +1,170 @@
 .homepage {
+  .banner-wrap {
+    margin: auto;
+    padding: 2rem;
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .logogram {
+    background: #424242;
+
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    .logoText {
+      font-size: 40px;
+      color: white;
+    }
+
+    svg {
+      fill: white;
+      width: 20vh;
+    }
+  }
+  .banner {
+    background: rgba(48, 48, 48, 0.2);
+    width: 100%;
+    height: 30vh;
+    // padding: 1rem 1rem;
+    // margin: 2rem;
+    display: flex;
+    flex-direction: row;
+
+    .pitch {
+      padding: 1rem 2rem;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      justify-content: center;
+      // width: 80%;
+      font-size: 34px;
+      // font-weight: bold;
+      color: #4a4a4a;
+      // margin-right: 1rem;
+
+      p {
+        opacity: 0.8;
+        margin: 1rem;
+
+        span {
+          font-weight: bold;
+
+          // color: #ffc107;
+          color: #424242;
+          text-decoration: underline;
+        }
+      }
+
+      .first {
+        text-align: left;
+      }
+
+      .second {
+        // text-align: ;
+      }
+
+      .third {
+        // text-align: right;
+      }
+    }
+  }
   h2 {
     padding-left: 1em;
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .banner-wrap {
+      margin-top: 1rem;
+      width: 90%;
+      padding: 0;
+    }
+    .logogram {
+      background: #424242;
+
+      width: 50%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      .logoText {
+        font-size: 30px;
+        color: white;
+      }
+
+      svg {
+        fill: white;
+        width: 10vh;
+        height: 10vh;
+      }
+    }
+
+    .banner {
+      width: 100%;
+      height: 18vh;
+      display: flex;
+      flex-direction: row;
+
+      .pitch {
+        padding: 1rem;
+        font-size: 30px;
+        font-weight: bold;
+
+        p {
+          margin: 0.5rem;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .banner-wrap {
+      margin-top: 1rem;
+      width: 90%;
+      padding: 0;
+    }
+    .logogram {
+      background: #424242;
+
+      width: 50%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      .logoText {
+        font-size: 20px;
+        color: white;
+      }
+
+      svg {
+        fill: white;
+        width: 10vh;
+        height: 10vh;
+      }
+    }
+
+    .banner {
+      width: 100%;
+      height: 18vh;
+      display: flex;
+      flex-direction: row;
+
+      .pitch {
+        padding: 1rem;
+        font-size: 16px;
+        font-weight: bold;
+
+        p {
+          margin: 0.5rem;
+        }
+      }
+    }
   }
 }
 

@@ -122,7 +122,6 @@ function App() {
                         onClick={() => {
                           signOut(
                             (res: any) => {
-                              console.log(res);
                               window.location.reload();
                             },
                             (err: any) => {

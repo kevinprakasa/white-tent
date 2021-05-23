@@ -1,3 +1,3 @@
-export const localCartKey = `WHITE_TENT-CART`;
+export const LOCAL_CART_KEY = `WHITE_TENT-CART`;
 
-export const localCartShopKey = `WHITE_TENT-SHOP`;
+export const LOCAL_CART_SHOP_KEY = `WHITE_TENT-SHOP`;

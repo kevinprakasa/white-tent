@@ -15,11 +15,12 @@ import {
   IOrderedItemType,
   IMenuItemType,
 } from "util/interfaces";
-import { getProductList, createOrder } from "util/FirebaseAPI";
+import { getProductList } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
-import { localCartKey, localCartShopKey } from "util/constants";
+import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
+import { Skeleton } from "@progress/kendo-react-indicators";
 
 export interface IMenuProps {
   shopId: string;
@@ -30,19 +31,17 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [orderedItemCount, setOrderedItemCount] = useState(0);
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
-  const [isFooterHidden, setIsFooterHidden] = useState(false);
+  const [isFooterHidden] = useState(false);
   const { shopName, shopId } = props;
 
   const history = useHistory();
-  const shopOrdered = localStorage.getItem(localCartShopKey);
-  const orderData = localStorage.getItem(localCartKey);
+  const shopOrdered = localStorage.getItem(LOCAL_CART_SHOP_KEY);
+  const orderData = localStorage.getItem(LOCAL_CART_KEY);
 
   useEffect(() => {
-    console.log(shopId);
     getProductList(
       shopId,
       (res: any) => {
-        console.log("asd", res);
         setMenuListObj(res);
       },
       (err: any) => {
@@ -54,7 +53,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
     if (shopOrdered === shopName && orderData) {
       setOrderItemObj(JSON.parse(orderData));
     }
-  }, [localCartKey]);
+  }, [orderData, shopName, shopId, shopOrdered]);
 
   const handleAddClick = (e: any, item: IMenuItemType) => {
     e.preventDefault();
@@ -63,12 +62,12 @@ const Menu: React.FC<IMenuProps> = (props) => {
     item.orderAmount = item.orderAmount + 1;
     if (shopOrdered !== shopName) {
       // if cart different from current shop replace with new one
-      localStorage.removeItem(localCartKey);
-      localStorage.setItem(localCartShopKey, shopName);
+      localStorage.removeItem(LOCAL_CART_KEY);
+      localStorage.setItem(LOCAL_CART_SHOP_KEY, shopName);
     }
     orderItemObj[`${orderedProductId}`] = item;
 
-    localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
     setOrderedItemCount(orderedItemCount + 1); //
   };
@@ -83,7 +82,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
       orderItemObj[`${orderedProductId}`] = item;
     }
 
-    localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
     setOrderedItemCount(orderedItemCount - 1); //
   };
@@ -230,7 +229,46 @@ const Menu: React.FC<IMenuProps> = (props) => {
           paddingBottom: `${orderCartCount === 0 ? "0rem" : "4rem"}`,
         }}
       >
-        {menuRender}
+        {menuRender.length > 0 ? (
+          menuRender
+        ) : (
+          <div>
+            <Skeleton shape="text" style={{ width: 45, marginLeft: "1rem" }} />
+            {Array(7)
+              .fill(0)
+              .map((_, idx) => {
+                return (
+                  <Card
+                    key={idx}
+                    orientation={"vertical"}
+                    className="menu-card"
+                    // key={`${dataItem.product_id}-${dataItem.orderAmount}`}
+                  >
+                    <div className="menu-top">
+                      <div className="menu-photo-text-wrap">
+                        <div className="menu-item-img-wrap">
+                          <Skeleton
+                            shape="rectangle"
+                            style={{ width: 73, height: 73 }}
+                          />
+                        </div>
+                        <div className="menu-item-text-wrap">
+                          <Skeleton shape="text" style={{ width: 55 }} />{" "}
+                          <Skeleton shape="text" style={{ width: 125 }} />
+                          <div className="price-add-btn-wrap">
+                            <div>
+                              <Skeleton shape="text" style={{ width: 45 }} />
+                            </div>
+                            <Skeleton shape="text" style={{ width: 45 }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+          </div>
+        )}
       </div>
       {orderCartCount > 0 && shopOrdered === shopName && (
         <div

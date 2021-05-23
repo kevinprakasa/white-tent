@@ -31,7 +31,6 @@ const SignupPage: React.FC = () => {
         address: payload.address,
       },
       (res: any) => {
-        console.log(res);
         setRenderDialog(
           <DialogComponent
             title={"Success"}

@@ -26,7 +26,6 @@ const LoginPage: React.FC = () => {
       payload.email,
       payload.password,
       (res: any) => {
-        console.log(res);
         setRenderDialog(
           <DialogComponent
             title={"Success"}

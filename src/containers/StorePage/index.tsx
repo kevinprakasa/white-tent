@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 
 import "./storePageStyle.scss";
 
@@ -9,9 +9,9 @@ import Menu from "components/Menu";
 import BackButton from "components/BackButton";
 import { Card, CardSubtitle, CardTitle } from "@progress/kendo-react-layout";
 import { getShopDetail } from "util/FirebaseAPI";
+import { Skeleton } from "@progress/kendo-react-indicators";
 
 const StorePage: React.FC = () => {
-  const history = useHistory();
   const { id }: { id: string } = useParams();
   const [shopState, setShopState] = useState<{
     shopName: string;
@@ -25,7 +25,7 @@ const StorePage: React.FC = () => {
     distance: 0,
   });
 
-  const { shopName, shopCategory, shopPhotoUrl, distance } = shopState;
+  const { shopName, distance } = shopState;
 
   useEffect(() => {
     const successCallback = (res: {
@@ -34,8 +34,6 @@ const StorePage: React.FC = () => {
       categories: string[];
       distance: number;
     }) => {
-      console.log(res);
-
       const { name, photo_url, categories, distance } = res;
       setShopState({
         shopName: name,
@@ -84,14 +82,23 @@ const StorePage: React.FC = () => {
       <BackButton />
       <Card orientation={"horizontal"} className="store-card">
         <div className="store-card-left">
-          <CardTitle>{shopName}</CardTitle>
-          <CardSubtitle className="store-location-wrap">
-            <LocationPin />
-            {distance} km away
-          </CardSubtitle>
+          {shopName ? (
+            <>
+              <CardTitle>{shopName}</CardTitle>
+              <CardSubtitle className="store-location-wrap">
+                <LocationPin />
+                {distance} km away
+              </CardSubtitle>
+            </>
+          ) : (
+            <>
+              <Skeleton shape="text" style={{ width: 200 }} />
+              <Skeleton shape="text" style={{ width: 150 }} />
+            </>
+          )}
         </div>
         <div className="store-card-right">
-          <img src={HeartIcon} />
+          <img src={HeartIcon} alt="hearticon" />
         </div>
       </Card>
 
