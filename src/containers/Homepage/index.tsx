@@ -18,6 +18,8 @@ import {
 } from "util/FirebaseAPI";
 import { capitalize } from "helpers";
 import { useHistory } from "react-router";
+import { ReactComponent as LogoGram } from "assets/whiteTentLogoGram.svg";
+import { ReactComponent as LogoText } from "assets/whiteTentText.svg";
 
 interface ShopCategories {
   [id: string]: {
@@ -94,6 +96,34 @@ const Homepage: FC = () => {
   const dummyArr = Array(7).fill(0);
   return (
     <div className="homepage">
+      <div className="banner-wrap">
+        <div className="logogram">
+          <LogoGram />
+          <div
+            className="logoText"
+            style={{
+              fontFamily: "Butler-Medium",
+              letterSpacing: "-0.02em",
+              fontWeight: 500,
+            }}
+          >
+            White Tent
+          </div>
+        </div>
+        <div className="banner">
+          <div className="pitch">
+            <p className="first">
+              Save your <span style={{ opacity: "1" }}>Money.</span>
+            </p>
+            <p className="second">
+              Help <span style={{ opacity: "1" }}>Local Stores.</span>
+            </p>
+            <p className="third">
+              Rescue the <span style={{ opacity: "1" }}>Environment.</span>
+            </p>
+          </div>
+        </div>
+      </div>
       <h2>Nearest from you</h2>
 
       <div className="slider-container">
