@@ -15,6 +15,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { getShopDetail } from "util/FirebaseAPI";
 import { createOrder } from "util/FirebaseAPI";
 import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
+import { Skeleton } from "@progress/kendo-react-indicators";
 
 const OrderPage: React.FC = () => {
   const SHOP_FEE = 3000;
@@ -204,7 +205,6 @@ const OrderPage: React.FC = () => {
       }
     );
   };
-
   return (
     <div className="order-page-container">
       <BackButton />
@@ -214,9 +214,13 @@ const OrderPage: React.FC = () => {
         </div>
         <div className="order-middle">
           <CardTitle>Pick Up Location</CardTitle>
-          <CardSubtitle className="middle-subtitle">
-            {shopState.address}
-          </CardSubtitle>
+          {shopState.shopName !== "" ? (
+            <CardSubtitle className="middle-subtitle">
+              {shopState.address}
+            </CardSubtitle>
+          ) : (
+            <Skeleton shape="text" style={{ width: 100 }} />
+          )}
         </div>
         <div className="order-right">
           <a href="/">Set</a>
