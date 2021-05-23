@@ -34,8 +34,6 @@ const StorePage: React.FC = () => {
       categories: string[];
       distance: number;
     }) => {
-      console.log(res);
-
       const { name, photo_url, categories, distance } = res;
       setShopState({
         shopName: name,

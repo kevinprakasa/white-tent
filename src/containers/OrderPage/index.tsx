@@ -14,7 +14,7 @@ import { formatRupiah } from "util/utils";
 import { useHistory, useParams } from "react-router-dom";
 import { getShopDetail } from "util/FirebaseAPI";
 import { createOrder } from "util/FirebaseAPI";
-import { localCartKey, localCartShopKey } from "util/constants";
+import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
 
 const OrderPage: React.FC = () => {
   const SHOP_FEE = 10000;
@@ -22,6 +22,7 @@ const OrderPage: React.FC = () => {
     IOrderedItemType[]
   >();
   const [subtotalPrice, setSubtotalPrice] = useState(0);
+  const [totalSaved, setTotalSaved] = useState(0);
   const { id }: { id: string } = useParams();
   const [shopState, setShopState] = useState<{
     shopName: string;
@@ -89,8 +90,9 @@ const OrderPage: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    let orderData = localStorage.getItem(localCartKey);
+    let orderData = localStorage.getItem(LOCAL_CART_KEY);
     let subtotalPrice = 0;
+    let total_saved = 0;
     if (orderData) {
       const orderDataObj = JSON.parse(orderData);
       const orderItemList = [];
@@ -106,18 +108,19 @@ const OrderPage: React.FC = () => {
           ? Number(discount_price) * orderAmount
           : Number(original_price) * orderAmount;
 
+        total_saved += discount_price ? original_price - discount_price : 0;
+
         orderItemList.push(orderDataObj[productId]);
       }
       setOrderItemObjList(orderItemList);
       setSubtotalPrice(subtotalPrice);
+      setTotalSaved(total_saved);
       // setOrderItemObjList(JSON.parse(orderData));
     }
-  }, [localCartKey]);
-  console.log(orderItemObjList);
+  }, [LOCAL_CART_KEY]);
 
   const itemRender = (props: any) => {
     const dataItem: IMenuItemType = props.dataItem;
-    console.log(dataItem);
     const {
       orderAmount,
       name,
@@ -186,12 +189,13 @@ const OrderPage: React.FC = () => {
       shop_id: id,
       total_price: subtotalPrice + SHOP_FEE,
       menu,
+      total_save: totalSaved,
     };
-    console.log(payload);
     createOrder(
       payload,
       (res: any) => {
-        console.log(res);
+        localStorage.removeItem(LOCAL_CART_KEY);
+        localStorage.removeItem(LOCAL_CART_SHOP_KEY);
         const transactionID = res.order_id;
         history.push("/transaction/" + transactionID);
       },

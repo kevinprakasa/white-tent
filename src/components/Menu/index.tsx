@@ -19,7 +19,7 @@ import { getProductList, createOrder } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
-import { localCartKey, localCartShopKey } from "util/constants";
+import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
 
 export interface IMenuProps {
   shopId: string;
@@ -34,15 +34,13 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const { shopName, shopId } = props;
 
   const history = useHistory();
-  const shopOrdered = localStorage.getItem(localCartShopKey);
-  const orderData = localStorage.getItem(localCartKey);
+  const shopOrdered = localStorage.getItem(LOCAL_CART_SHOP_KEY);
+  const orderData = localStorage.getItem(LOCAL_CART_KEY);
 
   useEffect(() => {
-    console.log(shopId);
     getProductList(
       shopId,
       (res: any) => {
-        console.log("asd", res);
         setMenuListObj(res);
       },
       (err: any) => {
@@ -54,7 +52,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
     if (shopOrdered === shopName && orderData) {
       setOrderItemObj(JSON.parse(orderData));
     }
-  }, [localCartKey]);
+  }, [LOCAL_CART_KEY]);
 
   const handleAddClick = (e: any, item: IMenuItemType) => {
     e.preventDefault();
@@ -63,12 +61,12 @@ const Menu: React.FC<IMenuProps> = (props) => {
     item.orderAmount = item.orderAmount + 1;
     if (shopOrdered !== shopName) {
       // if cart different from current shop replace with new one
-      localStorage.removeItem(localCartKey);
-      localStorage.setItem(localCartShopKey, shopName);
+      localStorage.removeItem(LOCAL_CART_KEY);
+      localStorage.setItem(LOCAL_CART_SHOP_KEY, shopName);
     }
     orderItemObj[`${orderedProductId}`] = item;
 
-    localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
     setOrderedItemCount(orderedItemCount + 1); //
   };
@@ -83,7 +81,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
       orderItemObj[`${orderedProductId}`] = item;
     }
 
-    localStorage.setItem(localCartKey, JSON.stringify(orderItemObj));
+    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
     setOrderItemObj(orderItemObj);
     setOrderedItemCount(orderedItemCount - 1); //
   };
