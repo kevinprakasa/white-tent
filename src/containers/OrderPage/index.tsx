@@ -109,7 +109,9 @@ const OrderPage: React.FC = () => {
           ? Number(discount_price) * orderAmount
           : Number(original_price) * orderAmount;
 
-        total_saved += discount_price ? original_price - discount_price : 0;
+        total_saved += Number(discount_price)
+          ? Number(original_price) - Number(discount_price)
+          : 0;
 
         orderItemList.push(orderDataObj[productId]);
       }
