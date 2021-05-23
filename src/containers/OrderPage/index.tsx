@@ -100,9 +100,9 @@ const OrderPage: React.FC = () => {
         const {
           original_price,
           discount_price,
-          name,
+          // name,
           orderAmount,
-          information,
+          // information,
         } = orderDataObj[productId];
         subtotalPrice += discount_price
           ? Number(discount_price) * orderAmount
@@ -117,14 +117,14 @@ const OrderPage: React.FC = () => {
       setTotalSaved(total_saved);
       // setOrderItemObjList(JSON.parse(orderData));
     }
-  }, [LOCAL_CART_KEY]);
+  }, []);
 
   const itemRender = (props: any) => {
     const dataItem: IMenuItemType = props.dataItem;
     const {
       orderAmount,
       name,
-      information,
+      // information,
       discount_price,
       original_price,
     } = dataItem;

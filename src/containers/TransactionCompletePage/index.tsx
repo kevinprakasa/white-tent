@@ -1,9 +1,11 @@
 import React from "react";
 
 import { Button } from "@progress/kendo-react-buttons";
-import { Card, CardSubtitle, CardTitle } from "@progress/kendo-react-layout";
+import { Card, CardTitle } from "@progress/kendo-react-layout";
+
 import "./transactionCompletePageStyle.scss";
 import { useHistory, useParams } from "react-router-dom";
+import TransactionInfo from "assets/transaction-info.png";
 
 const TransactionCompletePage: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -14,7 +16,11 @@ const TransactionCompletePage: React.FC = () => {
       <div className="transaction-successful-wrap">
         <h1>Transaction Successful!</h1>
         <div className="infographic-wrap">
-          <img />
+          <img
+            src={TransactionInfo}
+            alt="transaction-info"
+            style={{ width: "35vh" }}
+          />
         </div>
       </div>
       <div className="transaction-id-wrap">

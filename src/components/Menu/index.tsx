@@ -15,7 +15,7 @@ import {
   IOrderedItemType,
   IMenuItemType,
 } from "util/interfaces";
-import { getProductList, createOrder } from "util/FirebaseAPI";
+import { getProductList } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
@@ -30,7 +30,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [orderedItemCount, setOrderedItemCount] = useState(0);
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
-  const [isFooterHidden, setIsFooterHidden] = useState(false);
+  const [isFooterHidden] = useState(false);
   const { shopName, shopId } = props;
 
   const history = useHistory();
@@ -52,7 +52,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
     if (shopOrdered === shopName && orderData) {
       setOrderItemObj(JSON.parse(orderData));
     }
-  }, [LOCAL_CART_KEY]);
+  }, [orderData, shopName, shopId, shopOrdered]);
 
   const handleAddClick = (e: any, item: IMenuItemType) => {
     e.preventDefault();

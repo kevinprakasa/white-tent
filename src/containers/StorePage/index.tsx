@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router";
+import { useParams } from "react-router";
 
 import "./storePageStyle.scss";
 
@@ -11,7 +11,6 @@ import { Card, CardSubtitle, CardTitle } from "@progress/kendo-react-layout";
 import { getShopDetail } from "util/FirebaseAPI";
 
 const StorePage: React.FC = () => {
-  const history = useHistory();
   const { id }: { id: string } = useParams();
   const [shopState, setShopState] = useState<{
     shopName: string;
@@ -25,7 +24,7 @@ const StorePage: React.FC = () => {
     distance: 0,
   });
 
-  const { shopName, shopCategory, shopPhotoUrl, distance } = shopState;
+  const { shopName, distance } = shopState;
 
   useEffect(() => {
     const successCallback = (res: {
@@ -89,7 +88,7 @@ const StorePage: React.FC = () => {
           </CardSubtitle>
         </div>
         <div className="store-card-right">
-          <img src={HeartIcon} />
+          <img src={HeartIcon} alt="hearticon" />
         </div>
       </Card>
 

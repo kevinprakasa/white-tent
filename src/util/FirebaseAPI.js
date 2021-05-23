@@ -88,7 +88,7 @@ export function signInWithEmailAndPassword(
     .signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       // Signed in
-      var user = userCredential.user;
+      // var user = userCredential.user;
 
       getUserData(callbackSuccess, callbackError);
     })
@@ -311,21 +311,21 @@ export function createOrder(data, callbackSuccess, callbackError) {
   var orderRef = db.collection("users").doc(user.uid).collection("order").doc();
 
   db.runTransaction(async (transaction) => {
-        var counterDoc = await transaction.get(counterRef);
-        var totalSaveDoc = await transaction.get(totalSaveRef);
+    var counterDoc = await transaction.get(counterRef);
+    var totalSaveDoc = await transaction.get(totalSaveRef);
 
-        var incrementNumber = counterDoc.data()["value"] + 1;
-        var newTotalSave = totalSaveDoc.data()["value"] + data["total_save"];
+    var incrementNumber = counterDoc.data()["value"] + 1;
+    var newTotalSave = totalSaveDoc.data()["value"] + data["total_save"];
 
-        data["order_id"] = `WT_${incrementNumber}`;
-        data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
-        data["status"] = "active";
+    data["order_id"] = `WT_${incrementNumber}`;
+    data["created_at"] = firebase.firestore.FieldValue.serverTimestamp();
+    data["status"] = "active";
 
-        transaction.set(orderRef, data);
-        transaction.update(counterRef, { value: incrementNumber });
-        transaction.update(totalSaveRef, { value: newTotalSave });
-        
-        return Promise.resolve(true);
+    transaction.set(orderRef, data);
+    transaction.update(counterRef, { value: incrementNumber });
+    transaction.update(totalSaveRef, { value: newTotalSave });
+
+    return Promise.resolve(true);
   })
     .then(() => {
       orderRef
@@ -344,7 +344,11 @@ export function createOrder(data, callbackSuccess, callbackError) {
     });
 }
 
-export function getShopsByCategoryName(categoryName, callbackSuccess, callbackError) {
+export function getShopsByCategoryName(
+  categoryName,
+  callbackSuccess,
+  callbackError
+) {
   const shops = [];
 
   db.collection("shop")
@@ -355,11 +359,11 @@ export function getShopsByCategoryName(categoryName, callbackSuccess, callbackEr
         var data = doc.data();
 
         shops.push({
-            shop_id: doc.id,
-            name: data["name"],
-            photo_url: data["photo_url"],
-            categories: data["categories"]
-          });
+          shop_id: doc.id,
+          name: data["name"],
+          photo_url: data["photo_url"],
+          categories: data["categories"],
+        });
       });
 
       callbackSuccess(shops);
@@ -370,73 +374,84 @@ export function getShopsByCategoryName(categoryName, callbackSuccess, callbackEr
 }
 
 export async function getJsonFile() {
-    const whiteTentData = {
-        shops : [],
-        orders : []
+  const whiteTentData = {
+    shops: [],
+    orders: [],
+  };
+
+  const shops = await db.collection("shop").get();
+
+  for (let i in shops.docs) {
+    let doc = shops.docs[i];
+    let data = doc.data();
+
+    let shop = {
+      categories: data["categories"],
+      name: data["name"],
+      total_likes: parseInt(data["total_likes"]),
     };
 
-    const shops = await db.collection("shop").get();
+    const products = await db
+      .collection("shop")
+      .doc(doc.id)
+      .collection("products")
+      .get();
 
-    for (let i in shops.docs) {
-        let doc = shops.docs[i];
-        let data = doc.data();
+    shop["products"] = [];
 
-        let shop = {
-            categories : data["categories"],
-            name : data["name"],
-            total_likes : parseInt(data["total_likes"]),
-        };
+    products.forEach((doc) => {
+      let data = doc.data();
 
-        const products = await db.collection("shop").doc(doc.id).collection("products").get();
+      let discount =
+        (data["original_price"] - data["discount_price"]) /
+        data["original_price"];
+      discount = Math.round(discount * 100) / 100;
 
-        shop["products"] = [];
-
-        products.forEach((doc) => {
-            let data = doc.data();
-
-            let discount = (data["original_price"] - data["discount_price"]) / data["original_price"];
-            discount = Math.round(discount * 100) / 100;
-
-            shop["products"].push({
-                name : data["name"],
-                discount_price : data["discount_price"],
-                original_price : data["original_price"],
-                discount : discount,
-                categories : data["categories"]
-            });
-        })
-
-        const orders = await db.collectionGroup("order").where("shop_id", "==", doc.id).get();
-
-        shop["total_transaction"] = orders.size;
-
-        whiteTentData["shops"].push(shop);
-    }
-
-    const orders = await db.collectionGroup("order").get();
-    
-    orders.forEach((doc) => {
-        let data = doc.data();
-
-        whiteTentData["orders"].push({
-            shop_id : data["shop_id"],
-            total_price : data["total_price"],
-            status : data["status"]
-        });
+      shop["products"].push({
+        name: data["name"],
+        discount_price: data["discount_price"],
+        original_price: data["original_price"],
+        discount: discount,
+        categories: data["categories"],
+      });
     });
 
-    const fs = require('fs');
-    fs.writeFileSync('white_tent_data.json', JSON.stringify(whiteTentData));
+    const orders = await db
+      .collectionGroup("order")
+      .where("shop_id", "==", doc.id)
+      .get();
+
+    shop["total_transaction"] = orders.size;
+
+    whiteTentData["shops"].push(shop);
+  }
+
+  const orders = await db.collectionGroup("order").get();
+
+  orders.forEach((doc) => {
+    let data = doc.data();
+
+    whiteTentData["orders"].push({
+      shop_id: data["shop_id"],
+      total_price: data["total_price"],
+      status: data["status"],
+    });
+  });
+
+  const fs = require("fs");
+  fs.writeFileSync("white_tent_data.json", JSON.stringify(whiteTentData));
 }
 
 export function getTotalSaveTransaction(callbackSuccess, callbackError) {
-    db.collection("counter").doc("total_save").get()
-        .then((doc) => {
-            callbackSuccess({
-                total_save : doc.data()["value"]
-            });
-        })
-        .catch((error) => {
-            callbackError(error);
-        });
+  db.collection("counter")
+    .doc("total_save")
+    .get()
+    .then((doc) => {
+      callbackSuccess({
+        total_save: doc.data()["value"],
+      });
+    })
+    .catch((error) => {
+      callbackError(error);
+    });
 }
