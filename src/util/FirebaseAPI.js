@@ -505,3 +505,70 @@ export function finishTransaction(order_id, callbackSuccess, callbackError) {
             callbackError(error);
         });
 }
+
+export async function getThreeJsonFiles() {
+  const shopsData = [];
+  const ordersData = [];
+  const productsData = [];
+
+  const shops = await db.collection("shop").get();
+
+  for (let i in shops.docs) {
+    let doc = shops.docs[i];
+    let data = doc.data();
+
+    const orders = await db
+      .collectionGroup("order")
+      .where("shop_id", "==", doc.id)
+      .get();
+
+    shopsData.push({
+        shop_name : data["name"],
+        total_likes : parseInt(data["total_likes"]),
+        total_transaction : orders.size
+    });
+
+    const products = await db
+      .collection("shop")
+      .doc(doc.id)
+      .collection("products")
+      .get();
+
+    let shopName = data["name"];
+
+    for (let i in products.docs) {
+        let doc = products.docs[i];
+        let data = doc.data();
+
+        let discount = (data["original_price"] - data["discount_price"]) / data["original_price"];
+        discount = Math.round(discount * 100) / 100;
+
+        productsData.push({
+            shop_name : shopName,
+            name: data["name"],
+            discount_price: data["discount_price"],
+            original_price: data["original_price"],
+            discount: discount,
+            categories : data["categories"][0]
+        });
+    }
+  }
+
+  const orders = await db.collectionGroup("order").get();
+
+  for (let i in orders.docs) {
+      let doc = orders.docs[i];
+      let data = doc.data();
+
+      ordersData.push({
+          shop_name : data["shop_name"],
+          total_price : data["total_price"],
+          status : data["status"]
+      });
+  }
+
+  const fs = require("fs");
+  fs.writeFileSync("shop.json", JSON.stringify(shopsData));
+  fs.writeFileSync("product.json", JSON.stringify(productsData));
+  fs.writeFileSync("order.json", JSON.stringify(ordersData));
+}
