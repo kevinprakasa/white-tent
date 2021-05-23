@@ -9,6 +9,7 @@ import Menu from "components/Menu";
 import BackButton from "components/BackButton";
 import { Card, CardSubtitle, CardTitle } from "@progress/kendo-react-layout";
 import { getShopDetail } from "util/FirebaseAPI";
+import { Skeleton } from "@progress/kendo-react-indicators";
 
 const StorePage: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -81,11 +82,20 @@ const StorePage: React.FC = () => {
       <BackButton />
       <Card orientation={"horizontal"} className="store-card">
         <div className="store-card-left">
-          <CardTitle>{shopName}</CardTitle>
-          <CardSubtitle className="store-location-wrap">
-            <LocationPin />
-            {distance} km away
-          </CardSubtitle>
+          {shopName ? (
+            <>
+              <CardTitle>{shopName}</CardTitle>
+              <CardSubtitle className="store-location-wrap">
+                <LocationPin />
+                {distance} km away
+              </CardSubtitle>
+            </>
+          ) : (
+            <>
+              <Skeleton shape="text" style={{ width: 200 }} />
+              <Skeleton shape="text" style={{ width: 150 }} />
+            </>
+          )}
         </div>
         <div className="store-card-right">
           <img src={HeartIcon} alt="hearticon" />

@@ -19,7 +19,6 @@ import {
 import { capitalize } from "helpers";
 import { useHistory } from "react-router";
 import { ReactComponent as LogoGram } from "assets/whiteTentLogoGram.svg";
-import { ReactComponent as LogoText } from "assets/whiteTentText.svg";
 
 interface ShopCategories {
   [id: string]: {
