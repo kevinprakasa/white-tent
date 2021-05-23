@@ -483,3 +483,25 @@ export function getLastActiveTransaction(callbackSuccess, callbackError) {
             callbackError(error);
         });
 }
+
+export function finishTransaction(order_id, callbackSuccess, callbackError) {
+    db.collectionGroup("order")
+        .where("order_id", "==", order_id)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                doc.ref.update({
+                    "status" : "finished"
+                })
+                .then(() => {
+                    callbackSuccess("Success");
+                })
+                .catch((error) => {
+                    callbackError(error);
+                })
+            });
+        })
+        .catch((error) => {
+            callbackError(error);
+        });
+}
