@@ -14,12 +14,15 @@ import { Popup } from "@progress/kendo-react-popup";
 import { Loader } from "@progress/kendo-react-indicators";
 
 import AppLogoWhite from "assets/logo-white.svg";
+import * as API from "util/FirebaseAPI";
 
 const Homepage = React.lazy(() => import("containers/Homepage"));
 const LoginPage = React.lazy(() => import("containers/LoginPage"));
 const SignupPage = React.lazy(() => import("containers/SignupPage"));
 const StorePage = React.lazy(() => import("containers/StorePage"));
 const OrderPage = React.lazy(() => import("containers/OrderPage"));
+const ReportPage = React.lazy(() => import("containers/ReportPage"));
+
 const TransactionCompletePage = React.lazy(
   () => import("containers/TransactionCompletePage")
 );
@@ -237,12 +240,17 @@ function App() {
                 <TransactionCompletePage />
               </Suspense>
             </Route>
+            <Route path="/report">
+              <Suspense fallback={loader}>
+                <ReportPage />
+              </Suspense>
+            </Route>
             <Route path="/" exact>
               <Suspense fallback={loader}>
                 <Homepage />
               </Suspense>
             </Route>
-          </Switch>
+        </Switch>
         </div>
       </Router>
     </div>
