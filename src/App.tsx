@@ -36,6 +36,7 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(isUserLoggedIn());
     setIsUserLoggedInState(isUserLoggedIn());
   }, []);
 
