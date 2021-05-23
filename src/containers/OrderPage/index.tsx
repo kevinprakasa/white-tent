@@ -17,7 +17,7 @@ import { createOrder } from "util/FirebaseAPI";
 import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
 
 const OrderPage: React.FC = () => {
-  const SHOP_FEE = 10000;
+  const SHOP_FEE = 3000;
   const [orderItemObjList, setOrderItemObjList] = useState<
     IOrderedItemType[]
   >();

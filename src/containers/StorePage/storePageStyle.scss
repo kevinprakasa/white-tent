@@ -41,3 +41,50 @@
     }
   }
 }
+
+@media only screen and (min-width: 1024px) {
+  .store-page-container {
+    margin: 0 auto;
+    width: 50%;
+    .back-button-component-wrap {
+      margin: 1rem 0 2rem;
+      img {
+        width: 2vw;
+      }
+    }
+
+    .store-card {
+      min-height: 16vh;
+      border-radius: 20px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      box-shadow: 0px 1px 10px 0px #00000029;
+
+      .store-card-left {
+        width: 100%;
+        font-size: 28px;
+        color: #303030;
+
+        .store-location-wrap {
+          font-size: 18px;
+          display: flex;
+          align-items: center;
+          color: #ffc107;
+          font-weight: normal;
+          svg {
+            margin-right: 0.3rem;
+            width: 1vw;
+            height: auto;
+            fill: #ffc107;
+          }
+        }
+      }
+
+      .store-card-right {
+        img {
+          width: 2vw;
+        }
+      }
+    }
+  }
+}

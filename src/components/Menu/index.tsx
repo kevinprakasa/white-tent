@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ListView, ListViewHeader } from "@progress/kendo-react-listview";
 import {
   Card,
@@ -32,6 +32,7 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
   const [isFooterHidden] = useState(false);
+
   const { shopName, shopId } = props;
 
   const history = useHistory();
@@ -207,7 +208,8 @@ const Menu: React.FC<IMenuProps> = (props) => {
 
   const orderCartCount = Object.keys(orderItemObj).length;
 
-  const countTotalPrice = () => {
+  const countTotalPrice = useMemo(() => {
+    let count = 0;
     if (orderCartCount === 0) return 0;
     let total: number = 0;
     for (const key in orderItemObj) {
@@ -216,10 +218,12 @@ const Menu: React.FC<IMenuProps> = (props) => {
       const price = ordered.discount_price
         ? ordered.discount_price
         : ordered.original_price;
-      total += Number(price);
+      total += Number(price) * ordered.orderAmount;
+      count += ordered.orderAmount;
     }
+    setOrderedItemCount(count);
     return total;
-  };
+  }, [orderCartCount, orderItemObj]);
 
   return (
     <>
@@ -271,17 +275,18 @@ const Menu: React.FC<IMenuProps> = (props) => {
         )}
       </div>
       {orderCartCount > 0 && shopOrdered === shopName && (
-        <div
-          className="menu-order-footer"
-          style={{ opacity: `${isFooterHidden ? 0 : 1}` }}
-          onClick={() => history.push(`/order/${shopId}`)}
-        >
-          <div className="menu-order-left">
-            <p className="order-count">{orderCartCount} items</p>
-            <p className="store-name">{shopName}</p>
-          </div>
-          <div className="subtotal-price">
-            {formatRupiah(countTotalPrice(), "Rp")}
+        <div onClick={() => history.push(`/order/${shopId}`)}>
+          <div
+            className="menu-order-footer"
+            style={{ opacity: `${isFooterHidden ? 0 : 1}` }}
+          >
+            <div className="menu-order-left">
+              <p className="order-count">{orderedItemCount} items</p>
+              <p className="store-name">{shopName}</p>
+            </div>
+            <div className="subtotal-price">
+              {formatRupiah(countTotalPrice, "Rp")}
+            </div>
           </div>
         </div>
       )}
