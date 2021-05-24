@@ -1,0 +1,192 @@
+.order-page-container {
+  padding: 1rem 2rem;
+  color: #303030;
+  .back-button-component-wrap {
+    margin: 1rem 0 2rem;
+    img {
+      width: 6vw;
+    }
+  }
+
+  .store-card {
+    border-radius: 20px;
+    padding: 1.5rem 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0px 1px 10px 0px #00000029;
+    align-items: center;
+    justify-content: space-between;
+    .icon-wrap {
+      svg {
+        margin-right: 1rem;
+        width: 6vw;
+        height: auto;
+      }
+    }
+
+    .order-middle {
+      width: 100%;
+
+      .k-card-title {
+        font-size: 16px;
+        color: #303030;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      .middle-subtitle {
+        font-size: 14px;
+        color: #424242;
+        margin: 0;
+        font-weight: normal;
+      }
+    }
+
+    .order-right {
+      a {
+        text-decoration: 0;
+        font-size: 14px;
+        color: #729eff;
+      }
+    }
+  }
+
+  .order-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(66, 66, 66, 0.15);
+    align-items: center;
+    .left {
+      font-size: 18px;
+      color: #ffc107;
+      margin-right: 1rem;
+      font-weight: bold;
+    }
+    .middle {
+      font-size: 18px;
+      width: 100%;
+    }
+    .right {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+
+  .top-footer {
+    margin: 1rem 0;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(66, 66, 66, 0.15);
+    padding-bottom: 1rem;
+    .subtotal-row {
+      padding-left: 2rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .total-row {
+    font-size: 18px;
+    padding-left: 2rem;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    p {
+      margin: 0;
+    }
+  }
+
+  .price {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .bottom-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 1rem 0;
+    font-weight: bold;
+    font-size: 20px;
+    background: #ffc107;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .order-page-container {
+    width: 50%;
+    margin: 0 auto;
+    .back-button-component-wrap {
+      img {
+        width: 2vw;
+      }
+    }
+
+    .store-card {
+      .icon-wrap {
+        svg {
+          width: 2vw;
+        }
+      }
+
+      .order-middle {
+        .k-card-title {
+          font-size: 20px;
+        }
+
+        .middle-subtitle {
+          font-size: 20px;
+        }
+      }
+
+      .order-right {
+        a {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .order-item {
+      .left {
+        font-size: 22px;
+      }
+      .middle {
+        font-size: 22px;
+      }
+      .right {
+        font-size: 22px;
+      }
+    }
+
+    .top-footer {
+      font-size: 22px;
+    }
+
+    .total-row {
+      font-size: 22px;
+    }
+
+    .price {
+      font-size: 22px;
+    }
+
+    .bottom-footer {
+      width: 50%;
+      left: 25%;
+      font-size: 24px;
+    }
+  }
+
+  .menu-header {
+    font-size: 18px;
+  }
+}

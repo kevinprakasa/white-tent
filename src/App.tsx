@@ -13,6 +13,8 @@ import { Popup } from "@progress/kendo-react-popup";
 import { Loader } from "@progress/kendo-react-indicators";
 
 import AppLogoWhite from "assets/logo-white.svg";
+import { ActiveOrderNotification } from "containers/ActiveOrderNotification";
+import OrderDetailPage from "containers/OrderDetailPage";
 
 const Homepage = React.lazy(() => import("containers/Homepage"));
 const LoginPage = React.lazy(() => import("containers/LoginPage"));
@@ -227,12 +229,18 @@ function App() {
                 <TransactionCompletePage />
               </Suspense>
             </Route>
+            <Route path="/order-detail">
+              <Suspense fallback={loader}>
+                <OrderDetailPage />
+              </Suspense>
+            </Route>
             <Route path="/" exact>
               <Suspense fallback={loader}>
                 <Homepage />
               </Suspense>
             </Route>
           </Switch>
+          <ActiveOrderNotification></ActiveOrderNotification>
         </div>
       </Router>
     </div>

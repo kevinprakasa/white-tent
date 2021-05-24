@@ -15,7 +15,7 @@ import {
   IOrderedItemType,
   IMenuItemType,
 } from "util/interfaces";
-import { getProductList } from "util/FirebaseAPI";
+import { getLastActiveTransaction, getProductList } from "util/FirebaseAPI";
 
 import { formatRupiah } from "util/utils";
 import { useHistory } from "react-router";
@@ -31,6 +31,8 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const [orderedItemCount, setOrderedItemCount] = useState(0);
   const [orderItemObj, setOrderItemObj] = useState<IOrderedItemType>({});
   const [menuListObj, setMenuListObj] = useState<IMenuJsonListType>();
+  const [userHasLastActiveOrder, setUserHasLastActiveOrder] = useState(null);
+  const [showWarnCannotAddItem, setShowWarnCannotAddItem] = useState(false);
   const [isFooterHidden] = useState(false);
 
   const { shopName, shopId } = props;
@@ -38,6 +40,13 @@ const Menu: React.FC<IMenuProps> = (props) => {
   const history = useHistory();
   const shopOrdered = localStorage.getItem(LOCAL_CART_SHOP_KEY);
   const orderData = localStorage.getItem(LOCAL_CART_KEY);
+
+  useEffect(() => {
+    const succeessCb = (res: any) => {
+      setUserHasLastActiveOrder(res);
+    };
+    setTimeout(() => getLastActiveTransaction(succeessCb, console.log), 500);
+  }, []);
 
   useEffect(() => {
     getProductList(
@@ -58,19 +67,23 @@ const Menu: React.FC<IMenuProps> = (props) => {
 
   const handleAddClick = (e: any, item: IMenuItemType) => {
     e.preventDefault();
-    const orderedProductId = e.target.id;
+    if (!userHasLastActiveOrder) {
+      const orderedProductId = e.target.id;
 
-    item.orderAmount = item.orderAmount + 1;
-    if (shopOrdered !== shopName) {
-      // if cart different from current shop replace with new one
-      localStorage.removeItem(LOCAL_CART_KEY);
-      localStorage.setItem(LOCAL_CART_SHOP_KEY, shopName);
+      item.orderAmount = item.orderAmount + 1;
+      if (shopOrdered !== shopName) {
+        // if cart different from current shop replace with new one
+        localStorage.removeItem(LOCAL_CART_KEY);
+        localStorage.setItem(LOCAL_CART_SHOP_KEY, shopName);
+      }
+      orderItemObj[`${orderedProductId}`] = item;
+
+      localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
+      setOrderItemObj(orderItemObj);
+      setOrderedItemCount(orderedItemCount + 1); //
+    } else {
+      setShowWarnCannotAddItem(true);
     }
-    orderItemObj[`${orderedProductId}`] = item;
-
-    localStorage.setItem(LOCAL_CART_KEY, JSON.stringify(orderItemObj));
-    setOrderItemObj(orderItemObj);
-    setOrderedItemCount(orderedItemCount + 1); //
   };
 
   const handleMinClick = (e: any, item: IMenuItemType) => {

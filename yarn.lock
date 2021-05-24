@@ -1832,6 +1832,13 @@
     "@progress/kendo-react-common" "4.6.0"
     prop-types "^15.6.0"
 
+"@progress/kendo-react-notification@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-react-notification/-/kendo-react-notification-4.6.0.tgz#05138b72c6b28f5d96994961f880f73ec949fd03"
+  integrity sha512-4oueOJeoC5WjnhhShGl2nT/L9F2pu1z0M/6NlXpdnjVueM6OT9LCeDihAhW63NeNaabzGkF/dBC9+Ut3nULm1Q==
+  dependencies:
+    prop-types "^15.6.0"
+
 "@progress/kendo-react-popup@4.5.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-react-popup/-/kendo-react-popup-4.5.0.tgz#7d450adb5fb4b7ac787a64ccf9b5ab825b6a21c0"
