@@ -115,8 +115,6 @@ const OrderDetailPage: React.FC = () => {
           ...item,
         }))
       );
-
-      console.log(res);
     };
 
     const getLastActiveTransactionFailed = (res: any) => {};
