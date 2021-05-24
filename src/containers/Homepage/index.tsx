@@ -15,10 +15,12 @@ import {
   getNearestShops,
   getShopCategories,
   getMostLikedProducts,
+  getTotalSaveTransaction,
 } from "util/FirebaseAPI";
 import { capitalize } from "helpers";
 import { useHistory } from "react-router";
 import { ReactComponent as LogoGram } from "assets/whiteTentLogoGram.svg";
+import { formatRupiah } from "util/utils";
 
 interface ShopCategories {
   [id: string]: {
@@ -49,6 +51,19 @@ const Homepage: FC = () => {
   const [shopCategories, setShopCategories] = useState<ShopCategories>({});
   const [mostLikedProducts, setMostLikedProducts] = useState<Product[]>([]);
   const [nearestShops, setNearestShops] = useState<NearestShop[]>([]);
+  const [totalSaveTransaction, setTotalSaveTransaction] = useState(0);
+
+  useEffect(() => {
+    getTotalSaveTransaction(
+      (res: any) => {
+        // console.log(res);
+        setTotalSaveTransaction(res.total_save);
+      },
+      (err: any) => {
+        console.log(err);
+      }
+    );
+  }, []);
 
   useEffect(() => {
     const errorHandling = (error: any) => {
@@ -93,6 +108,7 @@ const Homepage: FC = () => {
   }, []);
 
   const dummyArr = Array(7).fill(0);
+  console.log(totalSaveTransaction);
   return (
     <div className="homepage">
       <div className="banner-wrap">
@@ -107,6 +123,19 @@ const Homepage: FC = () => {
             }}
           >
             White Tent
+          </div>
+          <div className="total-save">
+            {totalSaveTransaction > 0 ? (
+              <span>
+                <b>{formatRupiah(totalSaveTransaction, "Rp")} </b>saved in
+                total.
+              </span>
+            ) : (
+              <Skeleton
+                shape="text"
+                style={{ width: 100, background: "lightgray" }}
+              />
+            )}
           </div>
         </div>
         <div className="banner">
