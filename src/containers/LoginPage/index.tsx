@@ -16,7 +16,6 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log(isUserLoggedIn());
     if (isUserLoggedIn()) {
       history.replace("/");
     }

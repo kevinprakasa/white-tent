@@ -37,6 +37,7 @@ interface Product {
   original_price: number;
   photo_url: string;
   total_likes?: number;
+  shop_id: string;
 }
 
 interface NearestShop {
@@ -108,7 +109,6 @@ const Homepage: FC = () => {
   }, []);
 
   const dummyArr = Array(7).fill(0);
-  console.log(totalSaveTransaction);
   return (
     <div className="homepage">
       <div className="banner-wrap">
@@ -243,7 +243,11 @@ const Homepage: FC = () => {
         {mostLikedProducts.length > 0
           ? mostLikedProducts.map((product, index) => {
               return (
-                <div className="card-wrapper" key={index}>
+                <div
+                  className="card-wrapper"
+                  key={index}
+                  onClick={() => push(`/store/${product.shop_id}`)}
+                >
                   <Card
                     style={{
                       width: 260,
