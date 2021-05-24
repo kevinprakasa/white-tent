@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     if (isUserLoggedIn()) {
       window.location.replace("/");
     }
-  });
+  }, []);
 
   const handleSubmit = (payload: { [name: string]: any }) => {
     signInWithEmailAndPassword(
@@ -30,13 +30,14 @@ const LoginPage: React.FC = () => {
         setRenderDialog(
           <DialogComponent
             title={"Success"}
-            body={"redirect to home"}
+            body={"redirecting to home"}
             handleClose={() => {
               history.push("/");
               setRenderDialog(<></>);
             }}
           />
         );
+        setTimeout(() => window.location.replace("/"), 1000);
       },
       (err: any) => {
         console.error("[LOGIN ERROR]", err);
