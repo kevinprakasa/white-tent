@@ -41,6 +41,7 @@ const SignupPage: React.FC = () => {
             }}
           />
         );
+        setTimeout(() => window.location.replace("/"), 500);
       },
       (err: any) => {
         console.log("[SIGNUP ERROR]", err);
