@@ -20,6 +20,7 @@ const LoginPage = React.lazy(() => import("containers/LoginPage"));
 const SignupPage = React.lazy(() => import("containers/SignupPage"));
 const StorePage = React.lazy(() => import("containers/StorePage"));
 const OrderPage = React.lazy(() => import("containers/OrderPage"));
+const ReportPage = React.lazy(() => import("containers/ReportPage"))
 const TransactionCompletePage = React.lazy(
   () => import("containers/TransactionCompletePage")
 );
@@ -235,6 +236,11 @@ function App() {
             <Route path="/transaction/:id">
               <Suspense fallback={loader}>
                 <TransactionCompletePage />
+              </Suspense>
+            </Route>          
+            <Route path="/report">
+              <Suspense fallback={loader}>
+                <ReportPage />
               </Suspense>
             </Route>
             <Route path="/" exact>
