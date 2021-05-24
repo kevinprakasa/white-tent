@@ -10,15 +10,15 @@ import { emailValidator, passwordValidator } from "util/validators";
 import DialogComponent from "components/DialogComponent";
 
 import "./loginStyle.scss";
+import { windowStage } from "@progress/kendo-react-dialogs/dist/npm/StageEnum";
 
 const LoginPage: React.FC = () => {
   const [renderDialog, setRenderDialog] = useState(<></>);
   const history = useHistory();
 
   useEffect(() => {
-    console.log(isUserLoggedIn());
     if (isUserLoggedIn()) {
-      history.replace("/");
+      window.location.replace("/");
     }
   });
 

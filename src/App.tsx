@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { isUserLoggedIn, signOut } from "util/FirebaseAPI";
 
@@ -33,11 +34,11 @@ function App() {
     setIsShowMobileNavLinks(!isShowMobileNavLinks);
   };
 
-  const isUserLoggedInFirebase = isUserLoggedIn();
-
   useEffect(() => {
-    setIsUserLoggedInState(isUserLoggedInFirebase);
-  }, [isUserLoggedInFirebase]);
+    setTimeout(() => {
+      setIsUserLoggedInState(isUserLoggedIn());
+    }, 1000);
+  }, []);
 
   const loader = (
     <div
@@ -104,30 +105,21 @@ function App() {
                   ) : (
                     <>
                       <div className="popup-nav-link">
-                        <Link to="/login" style={{ textDecoration: "none" }}>
-                          Shops
-                        </Link>
-                      </div>
-                      <div className="popup-nav-link">
-                        <Link to="/login" style={{ textDecoration: "none" }}>
-                          Favourites
-                        </Link>
-                      </div>
-                      <div
-                        className="popup-nav-link"
-                        style={{ fontWeight: "bold" }}
-                        onClick={() => {
-                          signOut(
-                            (res: any) => {
-                              window.location.reload();
-                            },
-                            (err: any) => {
-                              console.error(err);
-                            }
-                          );
-                        }}
-                      >
-                        Logout
+                        <a
+                          onClick={() => {
+                            signOut(
+                              (res: any) => {
+                                window.location.reload();
+                              },
+                              (err: any) => {
+                                console.error(err);
+                              }
+                            );
+                          }}
+                          style={{ textDecoration: "none" }}
+                        >
+                          Logout
+                        </a>
                       </div>
                     </>
                   )}
@@ -171,28 +163,20 @@ function App() {
               <>
                 <AppBarSection>
                   <ul>
-                    <li>
-                      <Link
-                        to="/shops"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Shops
-                      </Link>
-                    </li>
-                  </ul>
-                </AppBarSection>
-                <AppBarSection>
-                  <span className="k-appbar-separator" />
-                </AppBarSection>
-                <AppBarSection>
-                  <ul>
-                    <li>
-                      <Link
-                        to="/favourites"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Favourites
-                      </Link>
+                    <li
+                      style={{ color: "white", textDecoration: "none" }}
+                      onClick={() => {
+                        signOut(
+                          (res: any) => {
+                            window.location.reload();
+                          },
+                          (err: any) => {
+                            console.error(err);
+                          }
+                        );
+                      }}
+                    >
+                      Logout
                     </li>
                   </ul>
                 </AppBarSection>
