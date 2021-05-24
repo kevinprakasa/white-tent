@@ -8,12 +8,13 @@ import {
   AppBar,
   AppBarSection,
   AppBarSpacer,
-  Avatar,
 } from "@progress/kendo-react-layout";
 import { Popup } from "@progress/kendo-react-popup";
 import { Loader } from "@progress/kendo-react-indicators";
 
 import AppLogoWhite from "assets/logo-white.svg";
+import { ActiveOrderNotification } from "containers/ActiveOrderNotification";
+import OrderDetailPage from "containers/OrderDetailPage";
 
 const Homepage = React.lazy(() => import("containers/Homepage"));
 const LoginPage = React.lazy(() => import("containers/LoginPage"));
@@ -25,9 +26,6 @@ const TransactionCompletePage = React.lazy(
   () => import("containers/TransactionCompletePage")
 );
 
-let kendokaAvatar =
-  "https://www.telerik.com/kendo-react-ui-develop/images/kendoka-react.png";
-
 function App() {
   const [isUserLoggedInState, setIsUserLoggedInState] = useState(false);
   const [isShowMobileNavLinks, setIsShowMobileNavLinks] = useState(false);
@@ -36,9 +34,11 @@ function App() {
     setIsShowMobileNavLinks(!isShowMobileNavLinks);
   };
 
+  const isUserLoggedInFirebase = isUserLoggedIn();
+
   useEffect(() => {
-    setIsUserLoggedInState(isUserLoggedIn());
-  }, []);
+    setIsUserLoggedInState(isUserLoggedInFirebase);
+  }, [isUserLoggedInFirebase]);
 
   const loader = (
     <div
@@ -197,14 +197,6 @@ function App() {
                     </li>
                   </ul>
                 </AppBarSection>
-                <AppBarSection>
-                  <span className="k-appbar-separator" />
-                </AppBarSection>
-                <AppBarSection>
-                  <Avatar shape="circle" type="image">
-                    <img src={kendokaAvatar} alt="avatar-logo" />
-                  </Avatar>
-                </AppBarSection>
               </>
             )}
           </div>
@@ -243,12 +235,18 @@ function App() {
                 <ReportPage />
               </Suspense>
             </Route>
+            <Route path="/order-detail">
+              <Suspense fallback={loader}>
+                <OrderDetailPage />
+              </Suspense>
+            </Route>
             <Route path="/" exact>
               <Suspense fallback={loader}>
                 <Homepage />
               </Suspense>
             </Route>
           </Switch>
+          <ActiveOrderNotification></ActiveOrderNotification>
         </div>
       </Router>
     </div>

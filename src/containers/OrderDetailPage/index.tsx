@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import "./orderPageStyle.scss";
+import "./orderDetailPageStyle.scss";
 import BackButton from "../../components/BackButton";
 import { Card, CardSubtitle, CardTitle } from "@progress/kendo-react-layout";
 import { ReactComponent as LocationPin } from "assets/location-pin.svg";
@@ -9,22 +9,23 @@ import {
   ListViewFooter,
   ListViewHeader,
 } from "@progress/kendo-react-listview";
-import { IMenuItemType, IOrderedItemType } from "util/interfaces";
+import { IMenuItemType } from "util/interfaces";
 import { formatRupiah } from "util/utils";
-import { useHistory, useParams } from "react-router-dom";
-import { getShopDetail } from "util/FirebaseAPI";
-import { createOrder } from "util/FirebaseAPI";
-import { LOCAL_CART_KEY, LOCAL_CART_SHOP_KEY } from "util/constants";
+import {
+  finishTransaction,
+  getLastActiveTransaction,
+  getShopDetail,
+} from "util/FirebaseAPI";
 import { Skeleton } from "@progress/kendo-react-indicators";
 
-const OrderPage: React.FC = () => {
+const OrderDetailPage: React.FC = () => {
   const SHOP_FEE = 3000;
   const [orderItemObjList, setOrderItemObjList] = useState<
-    IOrderedItemType[]
+    Partial<IMenuItemType>[]
   >();
+  const [shopId, setShopId] = useState("");
+  const [orderId, setorderId] = useState("");
   const [subtotalPrice, setSubtotalPrice] = useState(0);
-  const [totalSaved, setTotalSaved] = useState(0);
-  const { id }: { id: string } = useParams();
   const [shopState, setShopState] = useState<{
     shopName: string;
     shopCategory: string[];
@@ -38,7 +39,6 @@ const OrderPage: React.FC = () => {
     address: "",
     distance: 0,
   });
-  const history = useHistory();
 
   useEffect(() => {
     const successCallback = (res: {
@@ -65,12 +65,15 @@ const OrderPage: React.FC = () => {
       const {
         coords: { longitude, latitude },
       } = pos;
-      getShopDetail(
-        id,
-        { longitude, latitude },
-        successCallback,
-        failedCallback
-      );
+
+      if (shopId) {
+        getShopDetail(
+          shopId,
+          { longitude, latitude },
+          successCallback,
+          failedCallback
+        );
+      }
     };
 
     const errorGetLocationCallback = () => {
@@ -88,39 +91,48 @@ const OrderPage: React.FC = () => {
       // When current device doesn't support getting user's location
       console.warn("Geolocation is not supported by this browser");
     }
-  }, [id]);
+  }, [shopId]);
 
   useEffect(() => {
-    let orderData = localStorage.getItem(LOCAL_CART_KEY);
-    let subtotalPrice = 0;
-    let total_saved = 0;
-    if (orderData) {
-      const orderDataObj = JSON.parse(orderData);
-      const orderItemList = [];
-      for (const productId in orderDataObj) {
-        const {
-          original_price,
-          discount_price,
-          // name,
-          orderAmount,
-          // information,
-        } = orderDataObj[productId];
-        subtotalPrice += discount_price
-          ? Number(discount_price) * orderAmount
-          : Number(original_price) * orderAmount;
+    const getLastActiveTransactionSuccess = (res: {
+      total_price: number;
+      status: string;
+      order_id: string;
+      shop_id: string;
+      menu: {
+        product_id: string;
+        product_name: string;
+        total_amount: number;
+      }[];
+    }) => {
+      setorderId(res.order_id);
+      setSubtotalPrice(res.total_price);
+      setShopId(res.shop_id);
+      setOrderItemObjList(
+        res.menu.map((item) => ({
+          name: item.product_name,
+          orderAmount: item.total_amount,
+          ...item,
+        }))
+      );
+    };
 
-        total_saved += Number(discount_price)
-          ? Number(original_price) - Number(discount_price)
-          : 0;
+    const getLastActiveTransactionFailed = (res: any) => {};
 
-        orderItemList.push(orderDataObj[productId]);
-      }
-      setOrderItemObjList(orderItemList);
-      setSubtotalPrice(subtotalPrice);
-      setTotalSaved(total_saved);
-      // setOrderItemObjList(JSON.parse(orderData));
-    }
+    getLastActiveTransaction(
+      getLastActiveTransactionSuccess,
+      getLastActiveTransactionFailed
+    );
   }, []);
+
+  const onFinishOrder = () => {
+    const successCb = () => {
+      window.location.href = "/";
+    };
+    if (orderId) {
+      finishTransaction(orderId, successCb, console.log);
+    }
+  };
 
   const itemRender = (props: any) => {
     const dataItem: IMenuItemType = props.dataItem;
@@ -178,33 +190,6 @@ const OrderPage: React.FC = () => {
     );
   };
 
-  const handlePlaceOrder = () => {
-    const menu: any = [];
-    orderItemObjList?.forEach((item) => {
-      menu.push({
-        ...item,
-      });
-    });
-    const payload = {
-      shop_name: shopState.shopName,
-      shop_id: id,
-      total_price: subtotalPrice + SHOP_FEE,
-      menu,
-      total_save: totalSaved,
-    };
-    createOrder(
-      payload,
-      (res: any) => {
-        localStorage.removeItem(LOCAL_CART_KEY);
-        localStorage.removeItem(LOCAL_CART_SHOP_KEY);
-        const transactionID = res.order_id;
-        history.push("/transaction/" + transactionID);
-      },
-      (err: any) => {
-        console.error(err);
-      }
-    );
-  };
   return (
     <div className="order-page-container">
       <BackButton />
@@ -226,6 +211,13 @@ const OrderPage: React.FC = () => {
           <a href="/">Set</a>
         </div>
       </Card>
+      <ListViewHeader
+        className="menu-header"
+        style={{ textTransform: "capitalize", margin: "1rem 0 0" }}
+      >
+        Order ID
+      </ListViewHeader>
+      <h4>{orderId}</h4>
       {orderItemObjList && (
         <ListView
           data={orderItemObjList}
@@ -235,11 +227,11 @@ const OrderPage: React.FC = () => {
           footer={footer}
         />
       )}
-      <div className="bottom-footer" onClick={handlePlaceOrder}>
-        Place Order
+      <div className="bottom-footer" onClick={onFinishOrder}>
+        Finish Order
       </div>
     </div>
   );
 };
 
-export default OrderPage;
+export default OrderDetailPage;

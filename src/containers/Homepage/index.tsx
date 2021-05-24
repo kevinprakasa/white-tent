@@ -15,10 +15,12 @@ import {
   getNearestShops,
   getShopCategories,
   getMostLikedProducts,
+  getTotalSaveTransaction,
 } from "util/FirebaseAPI";
 import { capitalize } from "helpers";
 import { useHistory } from "react-router";
 import { ReactComponent as LogoGram } from "assets/whiteTentLogoGram.svg";
+import { formatRupiah } from "util/utils";
 
 interface ShopCategories {
   [id: string]: {
@@ -35,6 +37,7 @@ interface Product {
   original_price: number;
   photo_url: string;
   total_likes?: number;
+  shop_id: string;
 }
 
 interface NearestShop {
@@ -49,6 +52,19 @@ const Homepage: FC = () => {
   const [shopCategories, setShopCategories] = useState<ShopCategories>({});
   const [mostLikedProducts, setMostLikedProducts] = useState<Product[]>([]);
   const [nearestShops, setNearestShops] = useState<NearestShop[]>([]);
+  const [totalSaveTransaction, setTotalSaveTransaction] = useState(0);
+
+  useEffect(() => {
+    getTotalSaveTransaction(
+      (res: any) => {
+        // console.log(res);
+        setTotalSaveTransaction(res.total_save);
+      },
+      (err: any) => {
+        console.log(err);
+      }
+    );
+  }, []);
 
   useEffect(() => {
     const errorHandling = (error: any) => {
@@ -107,6 +123,19 @@ const Homepage: FC = () => {
             }}
           >
             White Tent
+          </div>
+          <div className="total-save">
+            {totalSaveTransaction > 0 ? (
+              <span>
+                <b>{formatRupiah(totalSaveTransaction, "Rp")} </b>saved in
+                total.
+              </span>
+            ) : (
+              <Skeleton
+                shape="text"
+                style={{ width: 100, background: "lightgray" }}
+              />
+            )}
           </div>
         </div>
         <div className="banner">
@@ -214,7 +243,11 @@ const Homepage: FC = () => {
         {mostLikedProducts.length > 0
           ? mostLikedProducts.map((product, index) => {
               return (
-                <div className="card-wrapper" key={index}>
+                <div
+                  className="card-wrapper"
+                  key={index}
+                  onClick={() => push(`/store/${product.shop_id}`)}
+                >
                   <Card
                     style={{
                       width: 260,

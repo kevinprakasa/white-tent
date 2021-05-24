@@ -9,7 +9,6 @@
 
   .logogram {
     background: #424242;
-
     width: 50%;
     display: flex;
     align-items: center;
@@ -24,6 +23,12 @@
     svg {
       fill: white;
       width: 20vh;
+    }
+
+    .total-save {
+      color: white;
+      font-size: 18px;
+      margin: 1rem 0;
     }
   }
   .banner {
@@ -46,7 +51,6 @@
       // font-weight: bold;
       color: #4a4a4a;
       // margin-right: 1rem;
-
       p {
         opacity: 0.8;
         margin: 1rem;
@@ -146,6 +150,9 @@
         fill: white;
         width: 10vh;
         height: 10vh;
+      }
+      .total-save {
+        font-size: 8px;
       }
     }
 
