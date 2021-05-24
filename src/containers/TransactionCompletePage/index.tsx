@@ -34,7 +34,7 @@ const TransactionCompletePage: React.FC = () => {
           look={"flat"}
           className="transaction-cta"
           onClick={() => {
-            history.push("/");
+            window.location.replace("/");
           }}
         >
           Finish Transaction
